@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 :copyright: (c) 2018 by LaunchDarkly
-:license: Apche 2.0, see LICENSE for more details.
+:license: Apache 2.0, see LICENSE for more details.
 """
 import os
 import sys
@@ -38,7 +38,7 @@ setup(
     description="CLI to Update LD Relay in Disaster Scenarios",
     long_description=readme(),
     url="https://github.com/launchdarkly/relayCommander",
-    author="Launch Darkly Solutions Engineering Team",
+    author="LaunchDarkly",
     author_email="sales@launchdarkly.com",
     license="Apache 2.0",
     classifiers=[
