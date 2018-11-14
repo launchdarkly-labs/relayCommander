@@ -1,6 +1,15 @@
 # relayCommander
 Python CLI to Update LD Relay in Disaster Scenarios
 
+## Quickstart
+
+1. Make sure you have [pipenv](https://pipenv.readthedocs.io/en/latest/install/) installed locally.
+2. Clone this repo and run `pipenv install -e.`
+3. Run some cli commands with `pipenv run rc`
+
+---
+
+# Design Notes
 ## Vision?
 rc update $PROJECT $ENV $FEATURE $STATE
 
