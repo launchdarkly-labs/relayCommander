@@ -6,7 +6,4 @@ jobs:
     steps:
       - checkout
       - run: pipenv install -e .
-      - run:
-          command: |
-            pipenv shell
-            rc
+      - run: pipenv run rc
