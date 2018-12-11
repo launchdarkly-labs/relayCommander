@@ -45,6 +45,7 @@ def update(project, environment, feature, state):
     if validateState(state):
         validState = False if (state.lower() == 'false') else True
         r = updateRelay(ld, validState)
+        # create external file with writing to file functionality and call RC function
         click.echo(feature + " was successfully updated")
     else:
         print("Invalid state: " + state + ", -s needs to be either true or false")
@@ -55,8 +56,31 @@ def update(project, environment, feature, state):
     # click.echo('Project: ' + project + '; Environment: ' +
     #     environment + '; Flag_key: ' + flag_key)
 
+@click.command()
+def play_Back():
+    click.echo("this will iterate through files and run rc commands")
+    # reach out to directory
+    # iterate through files
+
+@click.command()
+@click.option('-p', '--project', required=True)
+@click.option('-e', '--environment', required=True)
+@click.option('-f', '--feature', required=True)
+@click.option('-s', '--state', required=True)
+def ld_api(project, environment, feature, state):
+    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment, feature)
+
+    if validateState(state):
+        validState = False if (state.lower() == 'false') else True
+        r = ld.updateFlag(validState)
+        click.echo(feature + " was successfully updated")
+    else:
+        print("Invalid state: " + state + ", -s needs to be either true or false")
+
 cli.add_command(hello)
 cli.add_command(update)
+cli.add_command(play_Back)
+cli.add_command(ld_api)
 
 if __name__ == '__main__':
     cli()

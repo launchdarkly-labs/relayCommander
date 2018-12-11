@@ -1,20 +1,14 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
 
-
-
 [packages]
-
 "e3c20a7" = {path = "lib/api-client-python/", editable = true}
 "e1839a8" = {path = ".", editable = true}
-
+rc = {editable = true, path = "."}
 
 [requires]
-
 python_version = "3.6"

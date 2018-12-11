@@ -84,12 +84,10 @@ class LaunchDarklyApi():
         # return getFlag.environments[environmentKey].on
     
     def updateFlag(self, state):
-        # update to include the variable of the environment
         buildEnv = "/environments/"+ self.environmentKey + "/on"
-        #convertedState = False if (state.lower() == 'false') else True
-        print(state)
-        # patchComment = [{ "op": "replace", "path": buildEnv, "value": state }]
-        # return self.feature.patch_feature_flag(self.projectKey, self.featureKey, patchComment)
+        patchComment = [{ "op": "replace", "path": buildEnv, "value": state }]
+
+        return self.feature.patch_feature_flag(self.projectKey, self.featureKey, patchComment)
         
 
     def callText(self):

@@ -8,7 +8,7 @@ def updateRelay(ld, state):
     """
    
     #add envar for the host name of the redis server
-    r = redis.Redis(host='52.39.223.175', port=6379, db=0, password='f8178631-c6a3-4cf3-abed-6eb149a15137')
+    r = redis.Redis(host='34.220.2.85', port=6379, db=0, password='e73b83e0-4640-4be8-a7d8-78a3f1ff7b2f')
 
     setKeyName = 'ld:' + ld.projectKey + ':' + ld.environmentKey + ':' + 'features'
 
