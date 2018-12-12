@@ -1,5 +1,6 @@
 import redis
 import json
+import os
 
 def updateRelay(ld, state):
     """Connects to a redis DB and updates the redis cache with the supplied state
@@ -8,7 +9,7 @@ def updateRelay(ld, state):
     """
    
     #add envar for the host name of the redis server
-    r = redis.Redis(host='34.220.2.85', port=6379, db=0, password='e73b83e0-4640-4be8-a7d8-78a3f1ff7b2f')
+    r = redis.Redis(host=os.environ.get('REDIS_HOST'))
 
     setKeyName = 'ld:' + ld.projectKey + ':' + ld.environmentKey + ':' + 'features'
 
