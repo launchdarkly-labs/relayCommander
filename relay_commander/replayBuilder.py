@@ -4,19 +4,19 @@ import os
 import uuid
 
 
-
 def createDirectories(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 def checkLocal():
-    toCheck = ['../replay', '../replay/toDo', '../replay/archive']
+    toCheck = ['./replay', './replay/toDo', './replay/archive']
     
     for i in toCheck:
         createDirectories(i)
 
 def createFile(project, environment, feature, state):
-    savePath = 'replay/toDo/'
+    checkLocal()
+    savePath = './replay/toDo/'
     filename = str(uuid.uuid1()) + '.txt'
     completeName = os.path.join(savePath, filename)
 
