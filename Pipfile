@@ -6,9 +6,9 @@ name = "pypi"
 [dev-packages]
 
 [packages]
-"e3c20a7" = {path = "lib/api-client-python/", editable = true}
-"e1839a8" = {path = ".", editable = true}
-rc = {editable = true, path = "."}
+relaycommander = {editable = true, path = "."}
+# :( https://github.com/pypa/pipenv/issues/2871
+pip = "==18.0"
 
 [requires]
 python_version = "3.6"

@@ -11,7 +11,7 @@ from setuptools import setup
 from setuptools.command.install import install
 
 # relayCommander version
-VERSION = "1.1.2"
+VERSION = "0.0.1"
 
 def readme():
     """print long description"""
@@ -53,12 +53,13 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
     ],
     keywords='launchdarkly api redis relay',
-    packages=['relay_commander', 'lib/api-client-python'],
+    packages=['relay_commander'],
     install_requires=[
         'click',
         'requests',
         'redis',
-        'jinja2'
+        'jinja2',
+        'launchdarkly-api'
     ],
     python_requires='>=3',
     cmdclass={
