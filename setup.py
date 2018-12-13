@@ -33,7 +33,7 @@ class VerifyVersionCommand(install):
             sys.exit(info)
 
 setup(
-    name="rc",
+    name="relaycommander",
     version=VERSION,
     description="CLI to Update LD Relay in Disaster Scenarios",
     long_description=readme(),
