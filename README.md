@@ -20,6 +20,19 @@ rc update $PROJECT $ENV $FEATURE $STATE
 
 pip install relayCommander
 
+## Runbook
+Need to have the following pre-reqs and LD is offline:
+- Running on AWS
+- Change rule to deny all outbound traffic from relay proxy
+- Update Redis by running command rc update
+- Restart relay proxy server and changes will take effect
+
+Once LaunchDarkly is back online
+- Replay the updates that were made by running rc replay
+- Update the rule on AWS to allow outbound traffic again
+- Restart the relay box
+- Verify that making a change to a feature flag box
+
 ## Libraries
 
 [Click](https://click.palletsprojects.com/en/7.x/)
