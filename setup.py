@@ -58,7 +58,8 @@ setup(
         'click',
         'requests',
         'redis',
-        'jinja2'
+        'jinja2',
+        'launchdarkly-api'
     ],
     python_requires='>=3',
     cmdclass={
