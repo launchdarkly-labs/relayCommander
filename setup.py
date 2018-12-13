@@ -53,7 +53,7 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
     ],
     keywords='launchdarkly api redis relay',
-    packages=['relay_commander', 'lib/api-client-python'],
+    packages=['relay_commander'],
     install_requires=[
         'click',
         'requests',
