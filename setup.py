@@ -61,7 +61,7 @@ setup(
         'jinja2',
         'launchdarkly-api'
     ],
-    python_requires='==3.6',
+    python_requires='==3.6.*',
     cmdclass={
         'verify': VerifyVersionCommand,
     },
