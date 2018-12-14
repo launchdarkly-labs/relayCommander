@@ -2,17 +2,17 @@
 
 Wrapper for the LaunchDarkly API
 
-Note that the API SDK is generated using swagger. The entire library is
-stored in the lib/ directory since we do not currently publish this anywhere.
+Reference API - https://pypi.org/project/launchdarkly-api/
 """
 import launchdarkly_api
 import json
 
 
+
 class LaunchDarklyApi():
     """Wrapper for the LaunchDarkly API"""
 
-    def __init__(self, apiKey, projectKey, environmentKey, featureKey):
+    def __init__(self, apiKey, projectKey, environmentKey, logger=None):
         """Instantiate a new LaunchDarklyApi instance.
 
         :param apiKey: API Access Key for LaunchDarkly
@@ -23,7 +23,7 @@ class LaunchDarklyApi():
         self.apiKey = apiKey
         self.projectKey = projectKey
         self.environmentKey = environmentKey
-        self.featureKey = featureKey
+        self.logger = logger
 
 
         # get new LD client
@@ -63,32 +63,16 @@ class LaunchDarklyApi():
             envs.append(env)
 
         return envs
-
-    def getFlagStatus(self):
-        """Returns the status of a feaure flag.
-
-        Includes name, key, and mobile key, and formatted hostname.
-
-        :returns: boolean status of a feature flag
-        """
-        try:
-            getFlag = self.feature.get_feature_flag(self.projectKey, self.featureKey)
-            return getFlag.environments[self.environmentKey].on
-        except launchdarkly_api.rest.ApiException as e:
-            # getError = launchdarkly_api.rest.ApiException()
-            # print("Something went wrong")
-            print(e.getMessage())
-        
-
-        # getFlag = self.feature.get_feature_flag(projectKey, featureKey)
-        # return getFlag.environments[environmentKey].on
     
-    def updateFlag(self, state):
-        buildEnv = "/environments/"+ self.environmentKey + "/on"
+    def updateFlag(self, state, featureKey):
+        """Update the flag status for the specified feature flag
+
+        :param state: New feature flag state
+        :param featureKey: Feature flag key
+
+        :returns: boolean status of the feature flag attribute "on"
+        """
+        buildEnv = "/environments/" + self.environmentKey + "/on"
         patchComment = [{ "op": "replace", "path": buildEnv, "value": state }]
 
-        return self.feature.patch_feature_flag(self.projectKey, self.featureKey, patchComment)
-        
-
-    def callText(self):
-        return print("something is happening!")
+        return self.feature.patch_feature_flag(self.projectKey, featureKey, patchComment)

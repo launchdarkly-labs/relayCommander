@@ -16,49 +16,44 @@ from relay_commander.replayBuilder import createFile, executeReplay
 def cli():
     pass
 
-@click.command()
-def hello():
-    click.echo("Hello World")
-
-@click.command()
+@click.command(name='update-redis')
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-def update(project, environment, feature, state):
-    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment, feature)
+def updateRedis(project, environment, feature, state):
+    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment)
 
     if validateState(state):
         validState = False if (state.lower() == 'false') else True
+        updateRelay(ld, state)
         createFile(project, environment, feature, state)
-        click.echo(feature + " was successfully updated")
+        click.echo("{0} was successfully updated.".format(feature))
     else:
-        print("Invalid state: " + state + ", -s needs to be either true or false")
+        click.echo("Invalid state: {0}, -s needs to be either true or false.".format(state))
 
 @click.command()
 def playback():
     executeReplay()
     click.echo("LaunchDarkly is now update to date")
 
-
-@click.command()
+@click.command(name='update-ld-api')
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-def ld_api(project, environment, feature, state):
-    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment, feature)
+def updateLdApi(project, environment, feature, state):
+    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment)
 
     if validateState(state):
         validState = False if (state.lower() == 'false') else True
-        r = ld.updateFlag(validState)
+        ld.updateFlag(validState, feature)
     else:
-        print("Invalid state: " + state + ", -s needs to be either true or false")
+        click.echo('Invalid state: {0}, -s needs to be either true or false.'.format(state))
 
-cli.add_command(hello)
-cli.add_command(update)
+cli.add_command(updateRedis)
 cli.add_command(playback)
-cli.add_command(ld_api)
+cli.add_command(updateLdApi)
 
 if __name__ == '__main__':
     cli()
