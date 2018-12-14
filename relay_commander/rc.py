@@ -26,7 +26,7 @@ def updateRedis(project, environment, feature, state):
 
     if validateState(state):
         validState = False if (state.lower() == 'false') else True
-        updateRelay(ld, state)
+        updateRelay(ld, state, feature)
         createFile(project, environment, feature, state)
         click.echo("{0} was successfully updated.".format(feature))
     else:
