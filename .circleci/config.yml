@@ -5,8 +5,13 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - run: pipenv install -e .
+      - run: pipenv install -d -e .
       - run: pipenv run rc
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
+      - run: pipenv run codecov
   deploy:
     docker:
       - image: circleci/python:3.6
