@@ -10,8 +10,7 @@ jobs:
       - run:
           name: Run Test Suite
           command: |
-            pipenv shell
-            make test
+            pipenv run make test
   deploy:
     docker:
       - image: circleci/python:3.6
