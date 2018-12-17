@@ -3,6 +3,10 @@ Relay Commander
 
 A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay>`__ Instances. 
 
+.. image:: https://codecov.io/gh/launchdarkly/relayCommander/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/launchdarkly/relayCommander
+.. image:: https://circleci.com/gh/launchdarkly/relayCommander.svg?style=shield
+    :target: https://circleci.com/gh/launchdarkly/relayCommander
 
 Installation
 ============
