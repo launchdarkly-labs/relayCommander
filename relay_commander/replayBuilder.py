@@ -25,7 +25,7 @@ def createFile(project, environment, feature, state):
 	completeName = os.path.join(savePath, filename)
 	
 	with open(completeName, 'w') as file_object:
-		file_object.write('rc update-ld-api -p {0} -e {1} -f {2} -s {3}'.format(project, environment, feature, state)
+		file_object.write('rc update-ld-api -p {0} -e {1} -f {2} -s {3}'.format(project, environment, feature, state))
 
 def executeReplay():
 	"""Will itereate through files created in ./replay/toDO and move them to archive.
