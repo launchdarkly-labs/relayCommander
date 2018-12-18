@@ -1,22 +1,51 @@
-import redis
 import json
 import os
 
-def updateRelay(ld, state, featureKey):
-    """Connects to a redis DB and updates the redis cache with the supplied state
+import redis
 
-    :param ld: ld is an instance of LaunchDarklyApi
-    :param state: Updated state for feature flag
-    :param featureKey: Feature key
+
+class RedisWrapper():
+    """Relay Specific Redis Wrapper.
+    
+    :param ld: instance of LaunchDarklyApi
+    :param conn: (optional) redis connection string
     """
-    r = redis.Redis(host=os.environ.get('REDIS_HOST'))
+    def __init__(self, ld=None, conn=None):
+        self.ld = ld
+        self.conn = conn or os.environ.get('REDIS_HOST')
+        self.redis = redis.Redis(host=self.conn)
+
+    def _formatKeyName(self):
+        """Return formatted redis key name."""
+        keyName = 'ld:{0}:{1}:features'.format(
+            self.ld.projectKey,
+            self.ld.environmentKey
+        )
+        return keyName
     
-    setKeyName = 'ld:{0}:{1}:features'.format(ld.projectKey,ld.environmentKey)
-    getFlag = r.hget(setKeyName, featureKey)
-    parsedFlag = json.loads(getFlag)
-    parsedFlag['on'] = state
-    parsedFlag['version'] += 1
-    udpatedFlag = json.dumps(parsedFlag)
-    convertByte = udpatedFlag.encode('utf-8')
-    
-    r.hset(setKeyName, ld.featureKey, convertByte)
+    def getFlagRecord(self, featureKey):
+        """Get feature flag record from redis.
+
+        :param featureKey: key for feature flag
+        """
+        keyName = self._formatKeyName()
+        flag = self.redis.hget(keyName, featureKey)
+
+        if flag != None:
+            return flag
+        else:
+            raise Exception('redis key not found.')
+        
+    def updateFlagRecord(self, state, featureKey):
+        """Update redis record with new state.
+
+        :param state: state for feature flag 
+        :param featureKey: key for feature flag
+        """
+        parsedFlag = json.loads(self.getFlagRecord(featureKey))
+        parsedFlag['on'] = state
+        parsedFlag['version'] += 1
+
+        updatedFlag = json.dumps(parsedFlag).encode('utf-8')
+
+        self.redis.hset(keyName, featureKey, updatedFlag)
