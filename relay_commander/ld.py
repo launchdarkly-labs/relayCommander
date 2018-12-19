@@ -8,7 +8,6 @@ import launchdarkly_api
 import json
 
 
-
 class LaunchDarklyApi():
     """Wrapper for the LaunchDarkly API"""
 
@@ -24,7 +23,6 @@ class LaunchDarklyApi():
         self.projectKey = projectKey
         self.environmentKey = environmentKey
         self.logger = logger
-
 
         # get new LD client
         configuration = launchdarkly_api.Configuration()

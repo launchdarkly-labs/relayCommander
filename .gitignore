@@ -108,4 +108,4 @@ venv.bak/
 # OS X 
 *.DS_Store
 
-replay/*
+replay

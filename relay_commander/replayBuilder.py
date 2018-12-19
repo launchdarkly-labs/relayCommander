@@ -1,6 +1,8 @@
+import glob
 import os
 import uuid
 from subprocess import run
+
 
 def checkLocal():
 	"""Check for directories and create if not already there
@@ -28,17 +30,17 @@ def createFile(project, environment, feature, state):
 		file_object.write('rc update-ld-api -p {0} -e {1} -f {2} -s {3}'.format(project, environment, feature, state))
 
 def executeReplay():
-	"""Will itereate through files created in ./replay/toDO and move them to archive.
-	"""
-	path = './replay/toDo/'
-	getFiles = os.listdir(path)
-	getFiles = [os.path.join(path, file) for file in getFiles]
-	sortFiles = sorted(getFiles, key=os.path.getctime)
+	"""Execute commands
 	
-	for i in sortFiles:
-		getFile = open(i)
-		runUpdate = getFile.read()
-		run(runUpdate, shell=True)
-		getFile.close()
-		moveFile = 'mv {0} ./replay/archive/'.format(i)
-		run(moveFile, shell=True)
+	1. Itereate through files created in ./replay/toDO 
+	2. Execute the command inside each file
+	3. Move the file to the archive.
+	"""
+	files = glob.glob('./replay/toDo/*')
+	sortedFiles = sorted(files, key=os.path.getctime)
+	
+	for commandFile in sortedFiles:
+		with open(commandFile, 'r') as command:
+			run(command.read(), shell=True)
+			moveCommand = 'mv {0} ./replay/archive/'.format(command)
+			run(moveCommand, shell=True)

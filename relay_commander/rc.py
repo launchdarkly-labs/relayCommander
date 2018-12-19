@@ -8,7 +8,7 @@ import click
 
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.redis import updateRelay
+from relay_commander.redis import RedisWrapper
 from relay_commander.validator import validateState
 from relay_commander.replayBuilder import createFile, executeReplay
 
@@ -22,11 +22,10 @@ def cli():
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
 def updateRedis(project, environment, feature, state):
-    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment)
-
     if validateState(state):
-        validState = False if (state.lower() == 'false') else True
-        updateRelay(ld, state, feature)
+        state = False if (state.lower() == 'false') else True
+        r = RedisWrapper(project, environment)
+        r.updateFlagRecord(ld, state, feature)
         createFile(project, environment, feature, state)
         click.echo("{0} was successfully updated.".format(feature))
     else:
