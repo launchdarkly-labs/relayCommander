@@ -6,4 +6,7 @@ from relay_commander.generators import *
 class TestGenerators(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.configGenerator = ConfigGenerator()
+
+    def testInit(self):
+        self.assertIsInstance(self.configGenerator, ConfigGenerator)
