@@ -7,19 +7,21 @@ import redis
 class RedisWrapper():
     """Relay Specific Redis Wrapper.
     
-    :param ld: instance of LaunchDarklyApi
+    :param projectKey: LaunchDarkly project key
+    :param environmentKey: LaunchDarkly environment key.
     :param conn: (optional) redis connection string
     """
-    def __init__(self, ld=None, conn=None):
-        self.ld = ld
+    def __init__(self, projectKey, environmentKey, conn=None):
+        self.projectKey = projectKey
+        self.environmentKey = environmentKey
         self.conn = conn or os.environ.get('REDIS_HOST')
         self.redis = redis.Redis(host=self.conn)
 
     def _formatKeyName(self):
         """Return formatted redis key name."""
         keyName = 'ld:{0}:{1}:features'.format(
-            self.ld.projectKey,
-            self.ld.environmentKey
+            self.projectKey,
+            self.environmentKey
         )
         return keyName
     

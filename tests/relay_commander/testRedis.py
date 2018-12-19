@@ -2,19 +2,17 @@ import unittest
 from unittest.mock import MagicMock
 
 from relay_commander.redis import RedisWrapper
-from relay_commander.ld import LaunchDarklyApi
 
 class TestRedis(unittest.TestCase):
 
-    ld = MagicMock(spec=LaunchDarklyApi)
-    ld.projectKey = 'test'
-    ld.environmentKey = 'test'
-
     def setUp(self):
-        self.redis = RedisWrapper(self.ld)
+        self.redis = RedisWrapper('test', 'test')
+
+    def testFormatKeyName(self):
+        formattedKey = 'ld:test:test:features'
+        self.assertEqual(formattedKey, self.redis._formatKeyName())
 
     def testGetFlagRecord(self):
-
         # test unknown flag key raises exception
         with self.assertRaises(Exception):
             flag = self.redis.getFlagRecord('test')
