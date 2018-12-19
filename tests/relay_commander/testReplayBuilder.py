@@ -3,7 +3,6 @@ import glob
 import shutil
 
 from relay_commander.replayBuilder import *
-from click.testing import CliRunner
 
 class TestReplayBuilder(unittest.TestCase):
 
