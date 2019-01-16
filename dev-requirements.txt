@@ -2,3 +2,5 @@ coverage
 codecov
 twine
 sphinx
+sphinx_rtd_theme
+pylint
