@@ -9,8 +9,8 @@ A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay
 .. image:: https://circleci.com/gh/launchdarkly/relayCommander.svg?style=shield
     :target: https://circleci.com/gh/launchdarkly/relayCommander
 
-.. image:: https://readthedocs.org/projects/relaycommander/badge/?version=latest
-    :target: http://relaycommander.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/relay-commander/badge/?version=latest
+    :target: http://relay-commander.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 Installation
