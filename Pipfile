@@ -8,6 +8,8 @@ coverage = "*"
 twine = "*"
 Sphinx = "*"
 codecov = "*"
+sphinx_rtd_theme = "*"
+pylint = "*"
 
 [packages]
 relaycommander = {editable = true, path = "."}

@@ -1,0 +1,11 @@
+Changelog
+=========
+
+Here you can see the full list of changs between each relaycommander release.
+
+Version 0.0.5
+-------------
+
+Released on Dec 19, 2017
+
+* First alpha release including base functionality, code coverage, and unit tests. 
