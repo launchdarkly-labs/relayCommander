@@ -3,6 +3,14 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.8
+-------------
+
+Released on January 17, 2017 
+
+* Configure Logging 
+* Fix bug that failed to update redis due to missing key
+
 Version 0.0.7
 -------------
 
