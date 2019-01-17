@@ -1,12 +1,15 @@
 import unittest
+import logging
 from unittest.mock import MagicMock
 
 from relay_commander.redis import RedisWrapper
 
+logger = logging.getLogger(__name__)
+
 class TestRedis(unittest.TestCase):
 
     def setUp(self):
-        self.redis = RedisWrapper('test', 'test')
+        self.redis = RedisWrapper(logger, 'test', 'test')
 
     def testFormatKeyName(self):
         formattedKey = 'ld:test:test:features'
