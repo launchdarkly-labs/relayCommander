@@ -55,6 +55,7 @@ setup(
     packages=['relay_commander'],
     install_requires=[
         'click',
+        'click_log',
         'requests',
         'redis',
         'jinja2',
