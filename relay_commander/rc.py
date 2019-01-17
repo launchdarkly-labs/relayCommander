@@ -25,7 +25,7 @@ def updateRedis(project, environment, feature, state):
     if validateState(state):
         state = False if (state.lower() == 'false') else True
         r = RedisWrapper(project, environment)
-        r.updateFlagRecord(ld, state, feature)
+        r.updateFlagRecord(state, feature)
         createFile(project, environment, feature, state)
         click.echo("{0} was successfully updated.".format(feature))
     else:
