@@ -1,18 +1,25 @@
 """Relay Commander CLI
 """
+import logging
 import os
 import subprocess
 import sys
 
 import click
+import click_log
 
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
-from relay_commander.validator import validateState
 from relay_commander.replayBuilder import createFile, executeReplay
+from relay_commander.validator import validateState
+
+# set up logging
+logger = logging.getLogger(__name__)
+click_log.basic_config(logger)
 
 @click.group()
+@click_log.simple_verbosity_option(logger)
 def cli():
     pass
 
@@ -21,10 +28,11 @@ def cli():
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
+@click_log.simple_verbosity_option(logger)
 def updateRedis(project, environment, feature, state):
     if validateState(state):
         state = False if (state.lower() == 'false') else True
-        r = RedisWrapper(project, environment)
+        r = RedisWrapper(logger, project, environment)
         r.updateFlagRecord(state, feature)
         createFile(project, environment, feature, state)
         click.echo("{0} was successfully updated.".format(feature))
@@ -32,6 +40,7 @@ def updateRedis(project, environment, feature, state):
         click.echo("Invalid state: {0}, -s needs to be either true or false.".format(state))
 
 @click.command()
+@click_log.simple_verbosity_option(logger)
 def playback():
     executeReplay()
     click.echo("LaunchDarkly is now update to date")
@@ -41,6 +50,7 @@ def playback():
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
+@click_log.simple_verbosity_option(logger)
 def updateLdApi(project, environment, feature, state):
     ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment)
 
