@@ -3,6 +3,13 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.7
+-------------
+
+Released on January 16, 2017 
+
+* Fix bug in CLI command that does not allow you to update redis. 
+
 Version 0.0.6
 -------------
 

@@ -11,7 +11,7 @@ from setuptools import setup
 from setuptools.command.install import install
 
 # relayCommander version
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 def readme():
     """print long description"""
