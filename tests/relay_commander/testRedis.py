@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class TestRedis(unittest.TestCase):
 
     def setUp(self):
-        self.redis = RedisWrapper(logger, 'test', 'test')
+        self.redis = RedisWrapper('localhost', logger, 'test', 'test')
 
     def testFormatKeyName(self):
         formattedKey = 'ld:test:test:features'
