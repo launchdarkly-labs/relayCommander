@@ -3,10 +3,19 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.9
+-------------
+
+Released on January 25, 2019
+
+* Add feature to allow users to define multiple redis destinations. The CLI 
+will then attempt to update all hosts and report back the status via the 
+console.
+
 Version 0.0.8
 -------------
 
-Released on January 17, 2017 
+Released on January 17, 2019 
 
 * Configure Logging 
 * Fix bug that failed to update redis due to missing key
@@ -14,20 +23,20 @@ Released on January 17, 2017
 Version 0.0.7
 -------------
 
-Released on January 16, 2017 
+Released on January 16, 2019 
 
 * Fix bug in CLI command that does not allow you to update redis. 
 
 Version 0.0.6
 -------------
 
-Released on January 16, 2017
+Released on January 16, 2019
 
 * Added sphinx documentation 
 
 Version 0.0.5
 -------------
 
-Released on Dec 19, 2017
+Released on Dec 19, 2018
 
 * First alpha release including base functionality, code coverage, and unit tests. 
