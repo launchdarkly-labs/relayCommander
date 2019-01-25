@@ -30,14 +30,24 @@ def cli():
 @click.option('-s', '--state', required=True)
 @click_log.simple_verbosity_option(logger)
 def updateRedis(project, environment, feature, state):
-    if validateState(state):
-        state = False if (state.lower() == 'false') else True
-        r = RedisWrapper(logger, project, environment)
-        r.updateFlagRecord(state, feature)
-        createFile(project, environment, feature, state)
-        click.echo("{0} was successfully updated.".format(feature))
-    else:
-        click.echo("Invalid state: {0}, -s needs to be either true or false.".format(state))
+    rawHosts = os.environ.get('REDIS_HOSTS')
+    rawHostList = rawHosts.split(",")
+    hosts = [host for host in rawHostList if len(host) > 0]
+
+    for host in hosts:
+        logger.info(len(host))
+        logger.info("connecting to {0}".format(host))
+        try:
+            if validateState(state):
+                newState = False if (state.lower() == 'false') else True
+                r = RedisWrapper(host, logger, project, environment)
+                r.updateFlagRecord(newState, feature)
+                createFile(project, environment, feature, newState)
+                logger.info("{0} was successfully updated.".format(feature))
+            else:
+                logger.error("Invalid state: {0}, -s needs to be either true or false.".format(state))
+        except Exception as ex:
+            logger.error("unable to update {0}. Exception: {1}".format(host, ex))
 
 @click.command()
 @click_log.simple_verbosity_option(logger)
