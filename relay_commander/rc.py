@@ -35,7 +35,6 @@ def updateRedis(project, environment, feature, state):
     hosts = [host for host in rawHostList if len(host) > 0]
 
     for host in hosts:
-        logger.info(len(host))
         logger.info("connecting to {0}".format(host))
         try:
             if validateState(state):
