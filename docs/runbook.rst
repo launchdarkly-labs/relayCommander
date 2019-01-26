@@ -13,27 +13,46 @@ Setup
 Instructions
 -------------
 
-Pre-requisites:
-- Create a .env file similar to the sample file and be sure to update the following:
+Pre-requisites
+~~~~~~~~~~~~~~
+
+* Create a .env file similar to the sample file and be sure to update the following:
     -- REDIS_HOSTS
-        --- Update the .env file to include the host name(s) of the redis instances. If there are multiple redis instances running, provide as a CSV list of host names
+        * Update the .env file to include the host name(s) of the redis instances. If there are multiple redis instances running, provide as a CSV list of host names
     -- LD_API_KEY
-        --- LaunchDarkly API token to be used when writing the updates back to LaunchDarkly. Note that the API token requires administrative proviliges in order to work
+        * LaunchDarkly API token to be used when writing the updates back to LaunchDarkly. Note that the API token requires administrative proviliges in order to work
 
 While there is a disconnect with LaunchDarkly
-- Update redis by running: ``rc update -p project -e environment -f feature_flag -s state``
-    -- Project = the key of the project to be updated
-    -- Environment = the key of the environment to be updated
-    -- Feature = the key of the feature to be updated
-    -- State = the state of the feature flag you would like to change it to. Currently allows you to set it to On or Off
-    -- Each time this command is run, we will create a new direcoty called playback with a file containing the corresponding that needs to be run using the API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Update redis by running: 
+
+::
+    
+    rc update -p project -e environment -f feature_flag -s state
+
+* Project = the key of the project to be updated
+* Environment = the key of the environment to be updated
+* Feature = the key of the feature to be updated
+* State = the state of the feature flag you would like to change it to. Currently allows you to set it to On or Off
+
+Each time this command is run, we will create a new direcoty called playback with a file containing the corresponding that needs to be run using the API
+
 * No changes required: Changes will take effect once the relay cache detects the update and will broadcast the update to the SDK clients
 * (Optional) Restart the relay proxy to server to make the updates immediate
 
-** NO CHANGES CAN BE MADE WHILE LAUNCHDARKLY IS A DISCONNECTED. IT IS RECOMMENDED THAT YOU EITEHR HAVE AN INTERNAL PROCESS SO THAT NO ONE MAKES UPDATES DURING THIS TIME OR YOU DISABLE ALL LOGINS VIA SSO **
-
+.. warning::
+    NO CHANGES CAN BE MADE WHILE LAUNCHDARKLY IS A DISCONNECTED. IT IS RECOMMENDED THAT YOU EITEHR HAVE AN INTERNAL PROCESS SO THAT NO ONE MAKES UPDATES DURING THIS TIME OR YOU DISABLE ALL LOGINS VIA SSO
 
 Once LD is reconnected
-- Run the following command: ``rc replay``
-    -- Running this command will iterate through all of the files that were created during ``rc update`` and make the corresponding udpates in LaunchDakly via the API to synch it with the offline changes that were made
-- Verify that the current state in LaunchDarkly matches that last state that was set using RelayCommander
+~~~~~~~~~~~~~~~~~~~~~~
+
+Run the following command: 
+
+::
+
+    rc replay
+
+Running this command will iterate through all of the files that were created during ``rc update`` and make the corresponding udpates in LaunchDakly via the API to synch it with the offline changes that were made
+
+Verify that the current state in LaunchDarkly matches that last state that was set using RelayCommander
