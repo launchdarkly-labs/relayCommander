@@ -11,15 +11,12 @@ class RedisWrapper():
     :param environmentKey: LaunchDarkly environment key.
     :param conn: (optional) redis connection string
     """
-    def __init__(self, logger, projectKey, environmentKey, conn=None):
+    def __init__(self, host, logger, projectKey, environmentKey):
         self.logger = logger
         self.projectKey = projectKey
         self.environmentKey = environmentKey
-        self.conn = conn or os.environ.get('REDIS_HOST')
-        self.redis = redis.Redis(host=self.conn)
-
-        self.logger.info('established redis connection', self.redis)
-
+        self.redis = redis.Redis(host=host)
+    
     def _formatKeyName(self):
         """Return formatted redis key name."""
         keyName = 'ld:{0}:{1}:features'.format(
