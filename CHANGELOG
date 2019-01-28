@@ -3,6 +3,14 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.10
+--------------
+
+Released on January 28, 2019
+
+* Add feature that allows users to override the default redis port as 
+a part of the configuration. 
+
 Version 0.0.9
 -------------
 
@@ -11,6 +19,11 @@ Released on January 25, 2019
 * Add feature to allow users to define multiple redis destinations. The CLI 
 will then attempt to update all hosts and report back the status via the 
 console.
+
+.. warning::
+    All of the versions below have been unpublished from pypi to reduce 
+    confusion. If you need a specific version from below you can download the 
+    appropriate git tag and build the package from there.
 
 Version 0.0.8
 -------------
