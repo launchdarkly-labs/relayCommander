@@ -13,6 +13,9 @@ A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay
     :target: http://relaycommander.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://badge.fury.io/py/relaycommander.svg
+    :target: https://badge.fury.io/py/relaycommander
+    
 Installation
 ============
 
