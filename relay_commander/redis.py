@@ -1,8 +1,25 @@
+"""
+relay_commander.redis 
+
+A Redis Wrapper 
+"""
 import json
 import os
 
 import redis
 
+DEFAULT_REDIS_PORT = 6379
+
+
+class RedisConention():
+    """Redis Connetion
+
+    :param host: hostname for redis 
+    :param port: port for redis
+    """
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port 
 
 class RedisWrapper():
     """Relay Specific Redis Wrapper.
@@ -11,11 +28,11 @@ class RedisWrapper():
     :param environmentKey: LaunchDarkly environment key.
     :param conn: (optional) redis connection string
     """
-    def __init__(self, host, logger, projectKey, environmentKey):
+    def __init__(self, host, port, logger, projectKey, environmentKey):
         self.logger = logger
         self.projectKey = projectKey
         self.environmentKey = environmentKey
-        self.redis = redis.Redis(host=host)
+        self.redis = redis.Redis(host=host, port=port)
     
     def _formatKeyName(self):
         """Return formatted redis key name."""
@@ -25,6 +42,35 @@ class RedisWrapper():
         )
         return keyName
     
+    @staticmethod
+    def connectionStringParser(uri):
+        """Parse Connection string to extract host and port. 
+
+        :param uri: full URI for redis connection in the form of 
+        host:port 
+
+        :returns: list of RedisConnection objects
+        """
+        redisConnections = []
+        rawConnections = uri.split(',')
+        connections = [connection for connection in rawConnections if len(connection) > 0]
+
+        for connection in connections:
+            rawConnection = connection.split(':')
+            if len(rawConnection) == 1:
+                host = rawConnection[0].strip()
+                port = DEFAULT_REDIS_PORT
+            elif len(rawConnection) == 2:
+                host = rawConnection[0].strip()
+                port = int(rawConnection[1])
+            else:
+                raise Exception("unable to parse redis connection string.")
+
+            redisConnection = RedisConention(host, port)
+            redisConnections.append(redisConnection)
+        
+        return redisConnections
+
     def getFlagRecord(self, featureKey):
         """Get feature flag record from redis.
 

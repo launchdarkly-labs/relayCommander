@@ -16,11 +16,13 @@ Instructions
 Pre-requisites
 ~~~~~~~~~~~~~~
 
-* Create a .env file similar to the sample file and be sure to update the following:
+* Create a `.env` file similar to the `sample file<https://github.com/launchdarkly/relayCommander/blob/master/.env>`_ and be sure to update the following:
     -- REDIS_HOSTS
-        * Update the .env file to include the host name(s) of the redis instances. If there are multiple redis instances running, provide as a CSV list of host names
+        * Update the `.env` file to include the host name(s) and port of the redis instances. 
+        If there are multiple redis instances running, provide as a CSV list of host names.
     -- LD_API_KEY
-        * LaunchDarkly API token to be used when writing the updates back to LaunchDarkly. Note that the API token requires administrative proviliges in order to work
+        * LaunchDarkly API token to be used when writing the updates back to LaunchDarkly.
+         Note that the API token requires administrative proviliges in order to work.
 
 While there is a disconnect with LaunchDarkly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
