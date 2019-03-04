@@ -71,24 +71,32 @@ workflows:
             tags:
               only: /.*/
       - test-python-install:
+          name: test-python-34
           version: "3.4"
           requires:
             - build
       - test-python-install:
+          name: test-python-35
           version: "3.5"
           requires:
             - build
       - test-python-install:
+          name: test-python-36
           version: "3.6"
           requires:
             - build
       - test-python-install:
+          name: test-python-37
           version: "3.7"
           requires:
             - build
       - deploy:
           requires:
             - build
+            - test-python-34
+            - test-python-35
+            - test-python-36
+            - test-python-37
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
