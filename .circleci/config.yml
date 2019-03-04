@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -13,6 +13,26 @@ jobs:
           command: |
             pipenv run make test
       - run: pipenv run codecov
+  test-python-install:
+    parameters:
+      version:
+        type: string
+        default: latest
+    docker:
+      - image: circleci/python:<< parameters.version >>
+    steps:
+      - checkout
+      - run: pipenv install -d -e .
+      - run: pipenv run rc
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
+      - run:
+          name: Smoke Test Install
+          command: |
+            python --version
+            sudo pip3 install relaycommander
   deploy:
     docker:
       - image: circleci/python:3.6
@@ -44,12 +64,28 @@ jobs:
 
 workflows:
   version: 2
-  build_and_deploy:
+  build_test_deploy:
     jobs:
       - build:
           filters:
             tags:
               only: /.*/
+      - test-python-install:
+          version: "3.4"
+          requires:
+            - build
+      - test-python-install:
+          version: "3.5"
+          requires:
+            - build
+      - test-python-install:
+          version: "3.6"
+          requires:
+            - build
+      - test-python-install:
+          version: "3.7"
+          requires:
+            - build
       - deploy:
           requires:
             - build
