@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:latest
       - image: redis
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
             sudo pip3 install relaycommander
   deploy:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:latest
     steps:
       - checkout
       - run:
@@ -88,9 +88,11 @@ workflows:
       - deploy:
           requires:
             - build
-            - test-python-35
-            - test-python-36
-            - test-python-37
+            # Enable this after we publish the initial multi-version 
+            # package. Prior to 0.0.11 we supported 3.6 only.
+            # - test-python-35
+            # - test-python-36
+            # - test-python-37
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
