@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:copyright: (c) 2018 by LaunchDarkly
+:copyright: (c) 2018-2019 by LaunchDarkly
 :license: Apache 2.0, see LICENSE for more details.
 """
 import os
@@ -11,7 +11,7 @@ from setuptools import setup
 from setuptools.command.install import install
 
 # relayCommander version
-VERSION = "0.0.10"
+VERSION = "0.0.11"
 
 def readme():
     """print long description"""
@@ -61,7 +61,6 @@ setup(
         'jinja2',
         'launchdarkly-api'
     ],
-    python_requires='==3.6.*',
     cmdclass={
         'verify': VerifyVersionCommand,
     },
