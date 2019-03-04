@@ -15,6 +15,3 @@ pylint = "*"
 relaycommander = {editable = true, path = "."}
 # :( https://github.com/pypa/pipenv/issues/2871
 pip = "==18.0"
-
-[requires]
-python_version = "3.6"
