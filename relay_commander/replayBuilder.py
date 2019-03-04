@@ -5,7 +5,7 @@ import sys
 
 # support python 3.4
 # https://docs.python.org/3/library/subprocess.html#older-high-level-api
-if sys.version_info == (3,4):
+if sys.version_info < (3,4):
 	from subprocess import check_output as run
 else:
 	from subprocess import run
