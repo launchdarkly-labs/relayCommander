@@ -61,6 +61,8 @@ setup(
         'jinja2',
         'launchdarkly-api'
     ],
+    # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
+    python_requires='~=3.5',
     cmdclass={
         'verify': VerifyVersionCommand,
     },

@@ -2,14 +2,7 @@ import glob
 import os
 import uuid
 import sys 
-
-# support python 3.4
-# https://docs.python.org/3/library/subprocess.html#older-high-level-api
-if sys.version_info < (3,5):
-	from subprocess import check_output as run
-else:
-	from subprocess import run
-
+from subprocess import run
 
 def checkLocal():
 	"""Check for directories and create if not already there
