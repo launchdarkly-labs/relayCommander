@@ -25,9 +25,9 @@ Instructions
 Pre-requisites
 ~~~~~~~~~~~~~~
 
-* Create a ``.env`` file similar to the `sample file <https://github.com/launchdarkly/relayCommander/blob/master/.env>`_ and be sure to update the following:
+* Create a ``.env`` file similar to the `sample file <https://github.com/launchdarkly/relayCommander/blob/master/.env.example>`_ and be sure to update the following:
     -- REDIS_HOSTS
-        * Update the ``.env`` file to include the host name(s) and 
+        * Update the ``.env`` file to include the host name(s) and
           port of the redis instances.
         If there are multiple redis instances running, provide as a CSV list of host names.
     -- LD_API_KEY
