@@ -10,8 +10,8 @@ import redis
 DEFAULT_REDIS_PORT = 6379
 
 
-class RedisConention():
-    """Redis Connetion
+class _RedisConnection():
+    """Redis Connection Data Class
 
     :param host: hostname for redis
     :param port: port for redis
@@ -70,7 +70,7 @@ class RedisWrapper():
             else:
                 raise Exception("unable to parse redis connection string.")
 
-            redisConnection = RedisConention(host, port)
+            redisConnection = _RedisConnection(host, port)
             redisConnections.append(redisConnection)
 
         return redisConnections
