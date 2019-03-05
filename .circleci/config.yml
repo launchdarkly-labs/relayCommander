@@ -8,6 +8,8 @@ jobs:
       GOPATH: /home/circleci/go
     steps:
       - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
       - run:
           name: Install Go and LD Relay
           command: |
@@ -15,11 +17,27 @@ jobs:
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
       - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
-      - run: pipenv install -d -e .
-      - run: pipenv run rc
+      - run:
+          name: install python dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r dev-requirements.txt
+            pip install -e .
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          paths:
+            - "venv"
+      - run:
+          name: test rc command
+          command: |
+            . venv/bin/activate
+            rc
       - run:
           name: Generate Relay Config
-          command: pipenv run rc generate-relay-config -p support-service
+          command: |
+            . venv/bin/activate
+            rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
@@ -27,11 +45,18 @@ jobs:
       - run:
           name: Run Test Suite
           command: |
-            pipenv run make test
+            . venv/bin/activate
+            make test
       - run:
           name: Run Integration Tests
-          command: pipenv run make integration
-      - run: pipenv run codecov
+          command: |
+            . venv/bin/activate
+            make integration
+      - run:
+          name: Upload Code Coverage
+          command: |
+            . venv/bin/activate
+            codecov
   test-python-install:
     parameters:
       version:
@@ -44,18 +69,32 @@ jobs:
       GOPATH: /home/circleci/go
     steps:
       - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
       - run:
-          name: Install Go
+          name: Install Go and LD Relay
           command: |
             wget https://dl.google.com/go/go1.12.linux-amd64.tar.gz
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
       - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
-      - run: pipenv install -d -e .
-      - run: pipenv run rc
+      - run:
+          name: install python dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r dev-requirements.txt
+            pip install -e .
+      - run:
+          name: test rc command
+          command: |
+            . venv/bin/activate
+            rc
       - run:
           name: Generate Relay Config
-          command: pipenv run rc generate-relay-config -p support-service
+          command: |
+            . venv/bin/activate
+            rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
@@ -63,29 +102,36 @@ jobs:
       - run:
           name: Run Test Suite
           command: |
-            pipenv run make test
+            . venv/bin/activate
+            make test
       - run:
           name: Run Integration Tests
-          command: pipenv run make integration
+          command: |
+            . venv/bin/activate
+            make integration
       - run:
           name: Smoke Test Install
           command: |
-            python --version
             sudo pip3 install relaycommander
   deploy:
     docker:
       - image: circleci/python:latest
     steps:
       - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
       - run:
           name: install python dependencies
           command: |
-            pipenv install -e .
-            pipenv install twine
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r dev-requirements.txt
+            pip install -e .
       - run:
           name: verify git tag vs. version
           command: |
-            pipenv run python setup.py verify
+            . venv/bin/activate
+            python setup.py verify
       - run:
           name: init .pypirc
           command: |
@@ -95,11 +141,13 @@ jobs:
       - run:
           name: create packages
           command: |
-            pipenv run python setup.py sdist bdist_wheel
+            . venv/bin/activate
+            python setup.py sdist bdist_wheel
       - run:
           name: upload to pypi
           command: |
-            pipenv run twine upload dist/*
+            . venv/bin/activate
+            twine upload dist/*
 
 workflows:
   version: 2
@@ -127,11 +175,9 @@ workflows:
       - deploy:
           requires:
             - build
-            # Enable this after we publish the initial multi-version
-            # package. Prior to 0.0.11 we supported 3.6 only.
-            # - test-python-35
-            # - test-python-36
-            # - test-python-37
+            - test-python-35
+            - test-python-36
+            - test-python-37
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/

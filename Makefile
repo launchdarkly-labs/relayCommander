@@ -1,9 +1,11 @@
-.PHONY: _help docs package test
+.PHONY: _help docs package test integration
 
 _help:
 	@echo "Please enter a valid make target from the list below:"
+	@echo "docs - generate sphinx documentation"
 	@echo "package - package up for pypi"
-	@echo "test - run tests"
+	@echo "test - run unit tests"
+	@echo "integration - run integration tests"
 
 docs:
 	$(MAKE) -C docs html
