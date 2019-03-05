@@ -1,7 +1,7 @@
 import os
-import unittest
+import subprocess
 import time
-from subprocess import run
+import unittest
 
 from click.testing import CliRunner
 
@@ -11,38 +11,6 @@ from relay_commander.redis import RedisWrapper
 
 
 class TestIntegration(unittest.TestCase):
-
-    def setUp(self):
-        runner = CliRunner()
-        result = runner.invoke(
-            generateRelayConfig,
-            ['-p', 'support-service']
-        )
-        assert result.exit_code == 0
-        run(
-            "nohup $GOPATH/bin/ld-relay --config ./ld-relay.conf",
-            shell=True,
-            check=True
-        )
-
-        # sleep until ready, timeout after 10 seconds
-        flag = None
-        while flag is None:
-            try:
-                r = RedisWrapper(
-                    'localhost',
-                    6379,
-                    logger=None,
-                    projectKey='support-service',
-                    environmentKey='lev'
-                )
-                flag = r.getFlagRecord('relay-commander-integration-test')
-            except Exception:
-                time.sleep(1)
-                pass
-
-    def tearDown(self):
-        pass
 
     def testIntegration(self):
         # working with relay-commander-integration-test flag

@@ -21,7 +21,16 @@ jobs:
           name: Run Test Suite
           command: |
             pipenv run make test
-            pipenv run make integration
+      - run:
+          name: Generate Relay Config
+          command: pipenv run generate-relay-config -p support-service
+      - run:
+          name: Start LD Relay
+          command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
+          background: true
+      - run:
+          name: Run Integration Tests
+          command: pipenv run make integration
       - run: pipenv run codecov
   test-python-install:
     parameters:
@@ -48,7 +57,16 @@ jobs:
           name: Run Test Suite
           command: |
             pipenv run make test
-            pipenv run make integration
+      - run:
+          name: Generate Relay Config
+          command: pipenv run generate-relay-config -p support-service
+      - run:
+          name: Start LD Relay
+          command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
+          background: true
+      - run:
+          name: Run Integration Tests
+          command: pipenv run make integration
       - run:
           name: Smoke Test Install
           command: |
