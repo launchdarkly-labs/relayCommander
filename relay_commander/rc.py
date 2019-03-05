@@ -17,6 +17,8 @@ click_log.basic_config(logger)
 
 
 @click.group()
+@click.version_option(version='0.0.11', prog_name='relayCommander')
+@click.help_option()
 @click_log.simple_verbosity_option(logger)
 def cli():
     pass
