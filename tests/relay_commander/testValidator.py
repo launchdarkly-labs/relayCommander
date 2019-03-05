@@ -10,15 +10,15 @@ class TestValidator(unittest.TestCase):
         self.assertFalse(result)
     
     def testValidInput(self):
-        result = validateState('true')
+        result = validateState('on')
         self.assertTrue(result)
 
-        result = validateState('false')
+        result = validateState('off')
         self.assertTrue(result)
     
     def testValidInputMixcase(self):
-        result = validateState('TrUe')
+        result = validateState('oN')
         self.assertTrue(result)
 
-        result = validateState('FaLSE')
+        result = validateState('OfF')
         self.assertTrue(result)
