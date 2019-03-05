@@ -5,7 +5,6 @@ Wrapper for the LaunchDarkly API
 Reference API - https://pypi.org/project/launchdarkly-api/
 """
 import launchdarkly_api
-import json
 
 
 class LaunchDarklyApi():
@@ -54,14 +53,14 @@ class LaunchDarklyApi():
         for env in resp.environments:
             env = dict(
                 key=env.key,
-                api_key = env.api_key,
-                client_id = env.id,
-                hostname = self.formatHostname(env.key)
+                api_key=env.api_key,
+                client_id=env.id,
+                hostname=self.formatHostname(env.key)
             )
             envs.append(env)
 
         return envs
-    
+
     def updateFlag(self, state, featureKey):
         """Update the flag status for the specified feature flag
 
@@ -71,6 +70,10 @@ class LaunchDarklyApi():
         :returns: boolean status of the feature flag attribute "on"
         """
         buildEnv = "/environments/" + self.environmentKey + "/on"
-        patchComment = [{ "op": "replace", "path": buildEnv, "value": state }]
+        patchComment = [{"op": "replace", "path": buildEnv, "value": state}]
 
-        return self.feature.patch_feature_flag(self.projectKey, featureKey, patchComment)
+        return self.feature.patch_feature_flag(
+            self.projectKey,
+            featureKey,
+            patchComment
+            )

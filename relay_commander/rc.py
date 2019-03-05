@@ -2,13 +2,10 @@
 """
 import logging
 import os
-import subprocess
-import sys
 
 import click
-import click_log
 
-from relay_commander.generators import ConfigGenerator
+import click_log
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
 from relay_commander.replayBuilder import createFile, executeReplay
@@ -18,10 +15,12 @@ from relay_commander.validator import validateState
 logger = logging.getLogger(__name__)
 click_log.basic_config(logger)
 
+
 @click.group()
 @click_log.simple_verbosity_option(logger)
 def cli():
     pass
+
 
 @click.command(name='update-redis')
 @click.option('-p', '--project', required=True)
@@ -40,22 +39,34 @@ def updateRedis(project, environment, feature, state):
         try:
             if validateState(state):
                 newState = state.lower()
-                r = RedisWrapper(host.host, host.port, logger, project, environment)
+                r = RedisWrapper(
+                    host.host,
+                    host.port,
+                    logger,
+                    project,
+                    environment
+                )
                 r.updateFlagRecord(newState, feature)
                 createFile(project, environment, feature, newState)
                 logger.info("{0} was successfully updated.".format(feature))
             else:
-                raise Exception('Invalid state: {0}, -s needs to be either on or off.'.format(state))
+                raise Exception('Invalid state: {0}, -s needs \
+                    to be either on or off.'.format(state))
         except Exception as ex:
-            logger.error("unable to update {0}. Exception: {1}".format(host.host, ex))
+            logger.error("unable to update {0}. Exception: {1}".format(
+                host.host,
+                ex
+            ))
+
 
 @click.command()
 @click_log.simple_verbosity_option(logger)
 def playback():
     try:
         executeReplay(logger)
-    except:
+    except Exception:
         logger.error('Unable to Execute Replay.')
+
 
 @click.command(name='update-ld-api')
 @click.option('-p', '--project', required=True)
@@ -64,13 +75,20 @@ def playback():
 @click.option('-s', '--state', required=True)
 @click_log.simple_verbosity_option(logger)
 def updateLdApi(project, environment, feature, state):
-    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment, logger)
+    ld = LaunchDarklyApi(
+        os.environ.get('LD_API_KEY'),
+        project,
+        environment,
+        logger
+    )
 
     if validateState(state):
         validState = False if (state.lower() == 'off') else True
         ld.updateFlag(validState, feature)
     else:
-        raise Exception('Invalid state: {0}, -s needs to be either on or off.'.format(state))
+        raise Exception('Invalid state: {0}, -s needs to be either \
+            on or off.'.format(state))
+
 
 cli.add_command(updateRedis)
 cli.add_command(playback)
