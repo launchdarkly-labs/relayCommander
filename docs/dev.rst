@@ -4,13 +4,15 @@ Developer Documentation
 Installing Development Environment
 ----------------------------------
 
-This project uses pipenv for dependency management.
+This project uses pip for dependency management. You'll have a better time if
+you use a `virtualenv <https://docs.python.org/3/library/venv.html>`__.
 
-1. Make sure you have
-   `pipenv <https://pipenv.readthedocs.io/en/latest/install/>`__
-   installed locally.
-2. Clone this repo and run ``pipenv install -e .``
-3. Run some cli commands with ``pipenv run rc``
+1. Create a new virtualenv with ``python -m venv venv``.
+2. Activate the new virtualenv with ``. venv/bin/activate``.
+3. Install all of the project dependencies with
+   ``pip install -r dev-requirements.txt``.
+4. Install relayCommander in editable form with ``pip install -e .``
+5. Try out some cli commands with ``rc``.
 
 
 Running Tests
