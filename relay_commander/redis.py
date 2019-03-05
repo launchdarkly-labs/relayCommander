@@ -1,10 +1,9 @@
 """
-relay_commander.redis 
+relay_commander.redis
 
-A Redis Wrapper 
+A Redis Wrapper
 """
 import json
-import os
 
 import redis
 
@@ -14,16 +13,17 @@ DEFAULT_REDIS_PORT = 6379
 class RedisConention():
     """Redis Connetion
 
-    :param host: hostname for redis 
+    :param host: hostname for redis
     :param port: port for redis
     """
     def __init__(self, host, port):
         self.host = host
-        self.port = port 
+        self.port = port
+
 
 class RedisWrapper():
     """Relay Specific Redis Wrapper.
-    
+
     :param projectKey: LaunchDarkly project key
     :param environmentKey: LaunchDarkly environment key.
     :param conn: (optional) redis connection string
@@ -33,7 +33,7 @@ class RedisWrapper():
         self.projectKey = projectKey
         self.environmentKey = environmentKey
         self.redis = redis.Redis(host=host, port=port)
-    
+
     def _formatKeyName(self):
         """Return formatted redis key name."""
         keyName = 'ld:{0}:{1}:features'.format(
@@ -41,19 +41,21 @@ class RedisWrapper():
             self.environmentKey
         )
         return keyName
-    
+
     @staticmethod
     def connectionStringParser(uri):
-        """Parse Connection string to extract host and port. 
+        """Parse Connection string to extract host and port.
 
-        :param uri: full URI for redis connection in the form of 
-        host:port 
+        :param uri: full URI for redis connection in the form of
+        host:port
 
         :returns: list of RedisConnection objects
         """
         redisConnections = []
         rawConnections = uri.split(',')
-        connections = [connection for connection in rawConnections if len(connection) > 0]
+        connections = [
+            connection for connection in rawConnections if len(connection) > 0
+            ]
 
         for connection in connections:
             rawConnection = connection.split(':')
@@ -68,7 +70,7 @@ class RedisWrapper():
 
             redisConnection = RedisConention(host, port)
             redisConnections.append(redisConnection)
-        
+
         return redisConnections
 
     def getFlagRecord(self, featureKey):
@@ -79,15 +81,15 @@ class RedisWrapper():
         keyName = self._formatKeyName()
         flag = self.redis.hget(keyName, featureKey)
 
-        if flag != None:
+        if flag is not None:
             return flag
         else:
             raise Exception('redis key not found.')
-        
+
     def updateFlagRecord(self, state, featureKey):
         """Update redis record with new state.
 
-        :param state: state for feature flag 
+        :param state: state for feature flag
         :param featureKey: key for feature flag
         """
         keyName = self._formatKeyName()

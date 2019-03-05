@@ -5,12 +5,15 @@ _help:
 	@echo "package - package up for pypi"
 	@echo "test - run tests"
 
-docs: 
+docs:
 	$(MAKE) -C docs html
-	
+
 package:
 	python setup.py sdist bdist_wheel
 
 test:
-	coverage run -m unittest discover
+	coverage run -m unittest discover -s tests/relay_commander
 	coverage html
+
+integration:
+	python -m unittest discover -s tests/integration

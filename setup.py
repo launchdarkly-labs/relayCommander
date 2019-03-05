@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:copyright: (c) 2018 by LaunchDarkly
+:copyright: (c) 2018-2019 by LaunchDarkly
 :license: Apache 2.0, see LICENSE for more details.
 """
 import os
@@ -11,7 +11,8 @@ from setuptools import setup
 from setuptools.command.install import install
 
 # relayCommander version
-VERSION = "0.0.10"
+VERSION = "0.0.11"
+
 
 def readme():
     """print long description"""
@@ -27,10 +28,10 @@ class VerifyVersionCommand(install):
         tag = os.getenv('CIRCLE_TAG')
 
         if tag != VERSION:
-            info = "Git tag: {0} does not match the version of this app: {1}".format(
-                tag, VERSION
-            )
+            info = "Git tag: {0} does not match the version of this \
+                app: {1}".format(tag, VERSION)
             sys.exit(info)
+
 
 setup(
     name="relaycommander",
@@ -61,7 +62,8 @@ setup(
         'jinja2',
         'launchdarkly-api'
     ],
-    python_requires='==3.6.*',
+    # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
+    python_requires='~=3.5',
     cmdclass={
         'verify': VerifyVersionCommand,
     },

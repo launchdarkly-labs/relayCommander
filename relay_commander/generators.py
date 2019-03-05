@@ -1,8 +1,7 @@
 """Generator Module.
 
-Generates templates using jinja. 
+Generates templates using jinja.
 """
-import os
 from jinja2 import Environment, PackageLoader
 
 
@@ -13,13 +12,13 @@ class ConfigGenerator():
         self.env = Environment(
             loader=PackageLoader('relay_commander', 'templates')
         )
-    
-    def generate_relay_config(self, environments):
-        """Generate docker-compose.relay.yml."""
-        template = self.env.get_template('docker-compose.relay.jinja')
 
-        with open('docker-compose.relay.yml', 'w') as docker_compose_file:
+    def generate_relay_config(self, environments):
+        """Generate ld-relay.conf file."""
+        template = self.env.get_template('ld-relay.conf.jinja')
+
+        with open('ld-relay.conf', 'w') as ldRelayFile:
             t = template.render(
-                envs = environments
+                envs=environments
             )
-            docker_compose_file.write(t)
+            ldRelayFile.write(t)

@@ -1,20 +1,28 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [dev-packages]
+
 coverage = "*"
 twine = "*"
-Sphinx = "*"
+sphinx = "*"
 codecov = "*"
-sphinx_rtd_theme = "*"
+sphinx-rtd-theme = "*"
 pylint = "*"
 
-[packages]
-relaycommander = {editable = true, path = "."}
-# :( https://github.com/pypa/pipenv/issues/2871
-pip = "==18.0"
 
-[requires]
-python_version = "3.6"
+[packages]
+
+relaycommander = {editable = true, path = "."}
+pip = "==18.0"
+"e1839a8" = {path = ".", editable = true}
+click = "*"
+click-log = "*"
+requests = "*"
+redis = "*"
+"jinja2" = "*"
+launchdarkly-api = "*"

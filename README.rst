@@ -1,7 +1,7 @@
 Relay Commander
 ===============
 
-A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay>`__ Instances. 
+A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay>`__ Instances.
 
 .. image:: https://codecov.io/gh/launchdarkly/relayCommander/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/launchdarkly/relayCommander
@@ -15,11 +15,9 @@ A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay
 
 .. image:: https://badge.fury.io/py/relaycommander.svg
     :target: https://badge.fury.io/py/relaycommander
-    
+
 Installation
 ============
-
-Right now this tool only works with python version 3.6.
 
 ::
 
