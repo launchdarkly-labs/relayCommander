@@ -20,7 +20,7 @@ class TestIntegration(unittest.TestCase):
         )
         assert result.exit_code == 0
         run(
-            "$GOPATH/bin/ld-relay --config ./ld-relay.conf",
+            "nohup $GOPATH/bin/ld-relay --config ./ld-relay.conf",
             shell=True,
             check=True
         )
