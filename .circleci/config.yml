@@ -23,7 +23,7 @@ jobs:
             pipenv run make test
       - run:
           name: Generate Relay Config
-          command: pipenv run generate-relay-config -p support-service
+          command: pipenv run rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
@@ -59,7 +59,7 @@ jobs:
             pipenv run make test
       - run:
           name: Generate Relay Config
-          command: pipenv run generate-relay-config -p support-service
+          command: pipenv run rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
