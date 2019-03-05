@@ -6,6 +6,8 @@ Here you can see the full list of changs between each relaycommander release.
 Version 0.0.11
 --------------
 
+Released on March 5, 2019
+
 .. warning::
     This release fixes a critical bug where commands were not automatically
     being replayed via the CLI. All users are urged to upgrade to this version
@@ -19,6 +21,9 @@ Version 0.0.11
 * Add support for python 3.5, 3.6, and 3.7 - due to an upstream issue with
   swagger and python 3.7 we were not able to use the LD API wrapper in versions
   greater than 3.6. This is no longer the case.
+* Add integration tests to test out the general flow of the run book on all
+  supported python versions during CI.
+* Add new command to generate a relay proxy configuration for a given project.
 
 Version 0.0.10
 --------------
