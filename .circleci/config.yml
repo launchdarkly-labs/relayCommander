@@ -55,8 +55,8 @@ jobs:
       - run:
           name: Upload Code Coverage
           command: |
-          . venv/bin/activate
-          codecov
+            . venv/bin/activate
+            codecov
   test-python-install:
     parameters:
       version:
