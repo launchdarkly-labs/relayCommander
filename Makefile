@@ -16,4 +16,4 @@ test:
 	coverage html
 
 integration:
-	coverage run -m unittest discover -s tests/integration
+	python -m unittest discover -s tests/integration
