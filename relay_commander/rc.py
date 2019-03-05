@@ -102,7 +102,7 @@ def updateLdApi(project, environment, feature, state):
 def generateRelayConfig(project):
     """Generate Relay Proxy Configuration
 
-    Generate a docker-compose file to quickly spin up a relay proxy in docker.
+    Generate a ld-relay.conf file to quickly spin up a relay proxy.
     Right now this is mostly used for integration testing.
 
     :param project: LaunchDarkly project key

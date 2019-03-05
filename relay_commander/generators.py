@@ -14,11 +14,11 @@ class ConfigGenerator():
         )
 
     def generate_relay_config(self, environments):
-        """Generate docker-compose.relay.yml."""
-        template = self.env.get_template('docker-compose.relay.jinja')
+        """Generate ld-relay.conf file."""
+        template = self.env.get_template('ld-relay.conf.jinja')
 
-        with open('docker-compose.relay.yml', 'w') as docker_compose_file:
+        with open('ld-relay.conf', 'w') as ldRelayFile:
             t = template.render(
                 envs=environments
             )
-            docker_compose_file.write(t)
+            ldRelayFile.write(t)

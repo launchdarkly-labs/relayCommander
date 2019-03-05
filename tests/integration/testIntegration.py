@@ -20,7 +20,7 @@ class TestIntegration(unittest.TestCase):
         )
         assert result.exit_code == 0
         run(
-            "docker-compose -f docker-compose.relay.yml up -d",
+            "$GOPATH/bin/ld-relay --config ./ld-relay.conf",
             shell=True,
             check=True
         )
@@ -43,11 +43,6 @@ class TestIntegration(unittest.TestCase):
 
     def tearDown(self):
         pass
-        run(
-            "docker-compose -f docker-compose.relay.yml down",
-            shell=True,
-            check=True
-        )
 
     def testIntegration(self):
         # working with relay-commander-integration-test flag
