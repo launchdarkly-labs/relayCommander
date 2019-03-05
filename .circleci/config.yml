@@ -14,7 +14,7 @@ jobs:
             wget https://dl.google.com/go/go1.12.linux-amd64.tar.gz
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
-            go get -u gopkg.in/launchdarkly/ld-relay.v5/...
+      - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
@@ -36,12 +36,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Go and LD Relay
+          name: Install Go
           command: |
             wget https://dl.google.com/go/go1.12.linux-amd64.tar.gz
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
-            go get -u gopkg.in/launchdarkly/ld-relay.v5/...
+      - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
