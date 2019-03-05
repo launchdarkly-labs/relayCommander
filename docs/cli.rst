@@ -4,6 +4,6 @@ CLI
 CLI Interface
 -------------
 
-.. automodule:: relay_commander.rc
-    :members:
-    :private-members:
+.. click:: relay_commander.rc:cli
+   :prog: rc
+   :show-nested:
