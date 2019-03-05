@@ -3,6 +3,14 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.12
+--------------
+
+UNRELEASED
+
+* Add sphinx-click extension which allows us to automatically generate
+  documentation for our click based CLI using sphinx.
+
 Version 0.0.11
 --------------
 
