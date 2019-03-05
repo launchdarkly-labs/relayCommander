@@ -39,21 +39,23 @@ def updateRedis(project, environment, feature, state):
         logger.info("connecting to {0}:{1}".format(host.host, host.port))
         try:
             if validateState(state):
-                newState = False if (state.lower() == 'false') else True
+                newState = state.lower()
                 r = RedisWrapper(host.host, host.port, logger, project, environment)
                 r.updateFlagRecord(newState, feature)
                 createFile(project, environment, feature, newState)
                 logger.info("{0} was successfully updated.".format(feature))
             else:
-                logger.error("Invalid state: {0}, -s needs to be either true or false.".format(state))
+                raise Exception('Invalid state: {0}, -s needs to be either on or off.'.format(state))
         except Exception as ex:
             logger.error("unable to update {0}. Exception: {1}".format(host.host, ex))
 
 @click.command()
 @click_log.simple_verbosity_option(logger)
 def playback():
-    executeReplay()
-    click.echo("LaunchDarkly is now update to date")
+    try:
+        executeReplay(logger)
+    except:
+        logger.error('Unable to Execute Replay.')
 
 @click.command(name='update-ld-api')
 @click.option('-p', '--project', required=True)
@@ -62,13 +64,13 @@ def playback():
 @click.option('-s', '--state', required=True)
 @click_log.simple_verbosity_option(logger)
 def updateLdApi(project, environment, feature, state):
-    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment)
+    ld = LaunchDarklyApi(os.environ.get('LD_API_KEY'), project, environment, logger)
 
     if validateState(state):
-        validState = False if (state.lower() == 'false') else True
+        validState = False if (state.lower() == 'off') else True
         ld.updateFlag(validState, feature)
     else:
-        click.echo('Invalid state: {0}, -s needs to be either true or false.'.format(state))
+        raise Exception('Invalid state: {0}, -s needs to be either on or off.'.format(state))
 
 cli.add_command(updateRedis)
 cli.add_command(playback)
