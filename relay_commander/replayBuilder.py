@@ -2,6 +2,7 @@ import glob
 import os
 import uuid
 import sys 
+
 from subprocess import run
 
 def checkLocal():
@@ -27,9 +28,14 @@ def createFile(project, environment, feature, state):
 	completeName = os.path.join(savePath, filename)
 	
 	with open(completeName, 'w') as file_object:
-		file_object.write('rc update-ld-api -p {0} -e {1} -f {2} -s {3}'.format(project, environment, feature, state))
+		file_object.write('rc update-ld-api -p {0} -e {1} -f {2} -s {3}'.format(
+			project, 
+			environment, 
+			feature, 
+			state
+		))
 
-def executeReplay():
+def executeReplay(logger=None):
 	"""Execute commands
 	
 	1. Itereate through files created in ./replay/toDO 
@@ -38,9 +44,18 @@ def executeReplay():
 	"""
 	files = glob.glob('./replay/toDo/*')
 	sortedFiles = sorted(files, key=os.path.getctime)
-	
-	for commandFile in sortedFiles:
-		with open(commandFile, 'r') as command:
-			run(command.read(), shell=True)
-			moveCommand = 'mv {0} ./replay/archive/'.format(command)
-			run(moveCommand, shell=True)
+
+	if len(sortedFiles) > 0:
+		logger.debug('Found {0}, beginning execution.'.format(sortedFiles))
+		for commandFile in sortedFiles:
+			with open(commandFile, 'r') as command:
+				cmd = command.read()
+				logger.debug('executing command: {0}'.format(cmd))
+				resp = run([cmd, '-v', 'DEBUG'], shell=True, check=True)
+				logger.debug(resp)
+				logger.debug('moving {0} to archive'.format(command.name))
+				moveCommand = 'mv {0} ./replay/archive/'.format(command.name)
+				run(moveCommand, shell=True, check=True)
+		logger.info('LaunchDarkly is now up to date.')
+	else:
+		logger.warning('No files found, nothing to replay.')
