@@ -6,12 +6,14 @@ jobs:
       - image: redis
     steps:
       - checkout
+      - setup_remote_docker
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
           name: Run Test Suite
           command: |
             pipenv run make test
+            pipenv run make integration
       - run: pipenv run codecov
   test-python-install:
     parameters:
@@ -22,12 +24,14 @@ jobs:
       - image: circleci/python:<< parameters.version >>
     steps:
       - checkout
+      - setup_remote_docker
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
           name: Run Test Suite
           command: |
             pipenv run make test
+            pipenv run make integration
       - run:
           name: Smoke Test Install
           command: |
@@ -88,7 +92,7 @@ workflows:
       - deploy:
           requires:
             - build
-            # Enable this after we publish the initial multi-version 
+            # Enable this after we publish the initial multi-version
             # package. Prior to 0.0.11 we supported 3.6 only.
             # - test-python-35
             # - test-python-36
