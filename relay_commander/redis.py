@@ -16,6 +16,7 @@ class RedisConention():
     :param host: hostname for redis
     :param port: port for redis
     """
+
     def __init__(self, host, port):
         self.host = host
         self.port = port
@@ -28,6 +29,7 @@ class RedisWrapper():
     :param environmentKey: LaunchDarkly environment key.
     :param conn: (optional) redis connection string
     """
+
     def __init__(self, host, port, logger, projectKey, environmentKey):
         self.logger = logger
         self.projectKey = projectKey
@@ -55,7 +57,7 @@ class RedisWrapper():
         rawConnections = uri.split(',')
         connections = [
             connection for connection in rawConnections if len(connection) > 0
-            ]
+        ]
 
         for connection in connections:
             rawConnection = connection.split(':')
@@ -93,7 +95,7 @@ class RedisWrapper():
         :param featureKey: key for feature flag
         """
         keyName = self._formatKeyName()
-        parsedFlag = json.loads(self.getFlagRecord(featureKey))
+        parsedFlag = json.loads(self.getFlagRecord(featureKey).decode('utf-8'))
         parsedFlag['on'] = state
         parsedFlag['version'] += 1
 

@@ -18,16 +18,16 @@ jobs:
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
-          name: Run Test Suite
-          command: |
-            pipenv run make test
-      - run:
           name: Generate Relay Config
           command: pipenv run rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
           background: true
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
       - run:
           name: Run Integration Tests
           command: pipenv run make integration
@@ -54,16 +54,16 @@ jobs:
       - run: pipenv install -d -e .
       - run: pipenv run rc
       - run:
-          name: Run Test Suite
-          command: |
-            pipenv run make test
-      - run:
           name: Generate Relay Config
           command: pipenv run rc generate-relay-config -p support-service
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
           background: true
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
       - run:
           name: Run Integration Tests
           command: pipenv run make integration
