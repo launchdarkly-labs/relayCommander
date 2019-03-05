@@ -5,7 +5,7 @@ jobs:
       - image: circleci/python:latest
       - image: redis
     environment:
-      GOPATH: $HOME/go
+      GOPATH: /home/circleci/go
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
       - image: circleci/python:<< parameters.version >>
       - image: redis
     environment:
-      GOPATH: $HOME/go
+      GOPATH: /home/circleci/go
     steps:
       - checkout
       - run:
