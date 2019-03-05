@@ -8,8 +8,16 @@ Version 0.0.12
 
 UNRELEASED
 
+Core CLI
+~~~~~~~~
+
+Developer Experience
+~~~~~~~~~~~~~~~~~~~~
 * Add sphinx-click extension which allows us to automatically generate
   documentation for our click based CLI using sphinx.
+* Switch away from ``pipenv``. This was causing a few more problems than
+  it was solving, so we moved back to using a standard virtualenv, pip,
+  and requirements.txt file.
 
 Version 0.0.11
 --------------
