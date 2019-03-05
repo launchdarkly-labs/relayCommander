@@ -15,12 +15,6 @@ jobs:
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
       - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
-      - run: pipenv install -d -e .
-      - run: pipenv run rc
-      - run:
-          name: Run Test Suite
-          command: |
-            pipenv run make test
       - run:
           name: Generate Relay Config
           command: pipenv run rc generate-relay-config -p support-service
@@ -28,6 +22,12 @@ jobs:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
           background: true
+      - run: pipenv install -d -e .
+      - run: pipenv run rc
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
       - run:
           name: Run Integration Tests
           command: pipenv run make integration
@@ -51,12 +51,6 @@ jobs:
             sudo tar -C /usr/local -xzf go1.12.linux-amd64.tar.gz
             echo 'export PATH="$PATH:/usr/local/go/bin"' >> $BASH_ENV
       - run: go get -u gopkg.in/launchdarkly/ld-relay.v5/...
-      - run: pipenv install -d -e .
-      - run: pipenv run rc
-      - run:
-          name: Run Test Suite
-          command: |
-            pipenv run make test
       - run:
           name: Generate Relay Config
           command: pipenv run rc generate-relay-config -p support-service
@@ -64,6 +58,12 @@ jobs:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
           background: true
+      - run: pipenv install -d -e .
+      - run: pipenv run rc
+      - run:
+          name: Run Test Suite
+          command: |
+            pipenv run make test
       - run:
           name: Run Integration Tests
           command: pipenv run make integration
