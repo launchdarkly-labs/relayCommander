@@ -3,53 +3,70 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.11
+--------------
+
+.. warning::
+    This release fixes a critical bug where commands were not automatically
+    being replayed via the CLI. All users are urged to upgrade to this version
+    as soon as possible if it is being used in production.
+
+* Refactor CLI to accept ``on`` or ``off`` instead of ``true`` or ``false``.
+  This better aligns with the experience that a user would have if they were
+  to flip a kill switch in the LaunchDarkly UI.
+* Fix a critical bug where commands were not being replayed properly via
+  the playback command.
+* Add support for python 3.5, 3.6, and 3.7 - due to an upstream issue with
+  swagger and python 3.7 we were not able to use the LD API wrapper in versions
+  greater than 3.6. This is no longer the case.
+
 Version 0.0.10
 --------------
 
 Released on January 28, 2019
 
-* Add feature that allows users to override the default redis port as 
-a part of the configuration. 
+* Add feature that allows users to override the default redis port as
+a part of the configuration.
 
 Version 0.0.9
 -------------
 
 Released on January 25, 2019
 
-* Add feature to allow users to define multiple redis destinations. The CLI 
-will then attempt to update all hosts and report back the status via the 
+* Add feature to allow users to define multiple redis destinations. The CLI
+will then attempt to update all hosts and report back the status via the
 console.
 
 .. warning::
-    All of the versions below have been unpublished from pypi to reduce 
-    confusion. If you need a specific version from below you can download the 
+    All of the versions below have been unpublished from pypi to reduce
+    confusion. If you need a specific version from below you can download the
     appropriate git tag and build the package from there.
 
 Version 0.0.8
 -------------
 
-Released on January 17, 2019 
+Released on January 17, 2019
 
-* Configure Logging 
+* Configure Logging
 * Fix bug that failed to update redis due to missing key
 
 Version 0.0.7
 -------------
 
-Released on January 16, 2019 
+Released on January 16, 2019
 
-* Fix bug in CLI command that does not allow you to update redis. 
+* Fix bug in CLI command that does not allow you to update redis.
 
 Version 0.0.6
 -------------
 
 Released on January 16, 2019
 
-* Added sphinx documentation 
+* Added sphinx documentation
 
 Version 0.0.5
 -------------
 
 Released on Dec 19, 2018
 
-* First alpha release including base functionality, code coverage, and unit tests. 
+* First alpha release including base functionality, code coverage, and unit tests.
