@@ -6,6 +6,7 @@ import os
 import click
 
 import click_log
+from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
 from relay_commander.replayBuilder import createFile, executeReplay
@@ -92,9 +93,32 @@ def updateLdApi(project, environment, feature, state):
             on or off.'.format(state))
 
 
+@click.command(name='generate-relay-config')
+@click.option('-p', '--project', required=True)
+@click_log.simple_verbosity_option(logger)
+def generateRelayConfig(project):
+    """Generate Relay Proxy Configuration
+
+    Generate a docker-compose file to quickly spin up a relay proxy in docker.
+    Right now this is mostly used for integration testing.
+
+    :param project: LaunchDarkly project key
+    """
+    ld = LaunchDarklyApi(
+        os.environ.get('LD_API_KEY'),
+        projectKey=project,
+        logger=logger
+    )
+    config = ConfigGenerator()
+
+    envs = ld.getEnvironments(project)
+    config.generate_relay_config(envs)
+
+
 cli.add_command(updateRedis)
 cli.add_command(playback)
 cli.add_command(updateLdApi)
+cli.add_command(generateRelayConfig)
 
 if __name__ == '__main__':
     cli()

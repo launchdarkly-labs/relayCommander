@@ -10,7 +10,7 @@ import launchdarkly_api
 class LaunchDarklyApi():
     """Wrapper for the LaunchDarkly API"""
 
-    def __init__(self, apiKey, projectKey, environmentKey, logger=None):
+    def __init__(self, apiKey, projectKey=None, environmentKey=None, logger=None):
         """Instantiate a new LaunchDarklyApi instance.
 
         :param apiKey: API Access Key for LaunchDarkly
