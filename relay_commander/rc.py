@@ -60,6 +60,7 @@ def updateRedis(project, environment, feature, state):
                 host.host,
                 ex
             ))
+            exit(1)
 
 
 @click.command()
@@ -69,6 +70,7 @@ def playback():
         executeReplay(logger)
     except Exception:
         logger.error('Unable to Execute Replay.')
+        exit(1)
 
 
 @click.command(name='update-ld-api')
@@ -91,6 +93,7 @@ def updateLdApi(project, environment, feature, state):
     else:
         raise Exception('Invalid state: {0}, -s needs to be either \
             on or off.'.format(state))
+        exit(1)
 
 
 @click.command(name='generate-relay-config')

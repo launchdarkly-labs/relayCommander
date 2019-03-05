@@ -13,9 +13,7 @@ package:
 
 test:
 	coverage run -m unittest discover -s tests/relay_commander
+	coverage html
 
 integration:
 	coverage run -m unittest discover -s tests/integration
-
-coverage:
-	coverage html
