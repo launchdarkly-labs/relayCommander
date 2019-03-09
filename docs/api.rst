@@ -1,6 +1,8 @@
 API
 ===
 
+.. automodule:: relay_commander
+
 Utilities
 ---------
 

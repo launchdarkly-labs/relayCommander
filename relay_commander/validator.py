@@ -1,16 +1,21 @@
-"""validator module
+# -*- coding: utf-8 -*-
+"""
+relay_commander.validator
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Helper functions to validate CLI input
+This module provides helper functions that validate CLI input.
 """
 
 
-def validateState(state):
+def validateState(state: str) -> bool:
     """Validate State Argument
 
     Checks that either 'on' or 'off' was entered as an argument to the
     CLI and make it lower case.
 
-    :param state: state to validate
+    :param state: state to validate.
+
+    :returns: True if state is valid.
     """
     lowerCaseState = state.lower()
 
