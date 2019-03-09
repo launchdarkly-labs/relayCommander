@@ -47,3 +47,11 @@ Linting and Style
 -----------------
 
 This project follows the `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_ style guidelines. You can install ``pylint`` in order to ensure that all of your code is compliant with this standard.
+
+Release Checklist
+-----------------
+
+* update VERSION in setup.py
+* update version and release in docs/conf.py
+* make sure CHANGELOG has release date and relevant changes
+* git tag with the new version (make sure it matches VERSION)
