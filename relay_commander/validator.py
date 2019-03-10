@@ -17,9 +17,9 @@ import os
 import sys
 import logging
 
-_VALID_STATES: list = ['on', 'off']
+_VALID_STATES = ['on', 'off']
 """Internal constant that defines a valid ``state`` argument."""
-_REQUIRED_ENV_VARS: list = ['LD_API_KEY', 'REDIS_HOSTS']
+_REQUIRED_ENV_VARS = ['LD_API_KEY', 'REDIS_HOSTS']
 """Internal constant that defines required environment variables."""
 
 
