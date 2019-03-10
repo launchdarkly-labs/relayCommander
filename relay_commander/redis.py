@@ -1,23 +1,29 @@
+# -*- coding: utf-8 -*-
 """
 relay_commander.redis
+~~~~~~~~~~~~~~~~~~~~~
 
-A Redis Wrapper
+This module provides an interface for working with redis.
 """
 import json
 
 import redis
 
-DEFAULT_REDIS_PORT = 6379
+_DEFAULT_REDIS_PORT = 6379
+"""Internal constant that defines the default redis port."""
 
 
-class RedisConention():
-    """Redis Connetion
+class _RedisConnection():
+    """Private data class that represents a redis connection.
 
     :param host: hostname for redis
     :param port: port for redis
+
+    .. versionchanged:: 0.0.12
+        Refactored to become private, and renamed to fix typo.
     """
 
-    def __init__(self, host, port):
+    def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
 
@@ -36,7 +42,7 @@ class RedisWrapper():
         self.environmentKey = environmentKey
         self.redis = redis.Redis(host=host, port=port)
 
-    def _formatKeyName(self):
+    def _format_key_name(self) -> str:
         """Return formatted redis key name."""
         keyName = 'ld:{0}:{1}:features'.format(
             self.projectKey,
@@ -45,7 +51,7 @@ class RedisWrapper():
         return keyName
 
     @staticmethod
-    def connectionStringParser(uri):
+    def connectionStringParser(uri: str) -> list:
         """Parse Connection string to extract host and port.
 
         :param uri: full URI for redis connection in the form of
@@ -63,14 +69,14 @@ class RedisWrapper():
             rawConnection = connection.split(':')
             if len(rawConnection) == 1:
                 host = rawConnection[0].strip()
-                port = DEFAULT_REDIS_PORT
+                port = _DEFAULT_REDIS_PORT
             elif len(rawConnection) == 2:
                 host = rawConnection[0].strip()
                 port = int(rawConnection[1])
             else:
                 raise Exception("unable to parse redis connection string.")
 
-            redisConnection = RedisConention(host, port)
+            redisConnection = _RedisConnection(host, port)
             redisConnections.append(redisConnection)
 
         return redisConnections
