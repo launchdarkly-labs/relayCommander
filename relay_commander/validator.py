@@ -17,8 +17,6 @@ import os
 import sys
 import logging
 
-logger = logging.getLogger(__name__)
-
 _VALID_STATES: list = ['on', 'off']
 """Internal constant that defines a valid ``state`` argument."""
 _REQUIRED_ENV_VARS: list = ['LD_API_KEY', 'REDIS_HOSTS']
@@ -39,11 +37,10 @@ def _check_env_var(envvar: str) -> bool:
     if os.getenv(envvar) is None:
         raise KeyError(
             "Required ENVVAR: {0} is not set".format(envvar))
-    if len(os.getenv(envvar)) < 1:
+    if not os.getenv(envvar):  # test if env var is empty
         raise KeyError(
             "Required ENVVAR: {0} is empty".format(envvar))
-    else:
-        return True
+    return True
 
 
 def valid_state(state: str) -> bool:
@@ -74,11 +71,10 @@ def valid_env_vars() -> bool:
 
     .. versionadded:: 0.0.12
     """
-    for e in _REQUIRED_ENV_VARS:
+    for envvar in _REQUIRED_ENV_VARS:
         try:
-            _check_env_var(e)
+            _check_env_var(envvar)
         except KeyError as ex:
-            logger.error(ex)
+            logging.error(ex)
             sys.exit(1)
-
     return True
