@@ -8,15 +8,15 @@ This module defines the relayCommander CLI.
 import os
 
 import click
-
 import click_log
+
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
 from relay_commander.replayBuilder import createFile, executeReplay
-from relay_commander.validator import valid_state, valid_env_vars
-from relay_commander.version import VERSION
 from relay_commander.util import log
+from relay_commander.validator import valid_env_vars, valid_state
+from relay_commander.version import VERSION
 
 # set up logging
 click_log.basic_config(log)
@@ -31,6 +31,9 @@ def cli() -> None:
 
     Runs valid_env_vars() before each command invocation to verify that
     required Environment Variables are set and are not empty.
+
+    .. versionchanged:: 0.0.12
+    Added environment variable check before executing any other command.
     """
     valid_env_vars()
 

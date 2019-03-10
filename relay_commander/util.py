@@ -3,6 +3,8 @@ relay_commander.util
 ~~~~~~~~~~~~~~~~~~~~
 
 General internal helper functions.
+
+.. versionadded:: 0.0.12
 """
 import logging
 import sys

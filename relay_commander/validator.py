@@ -4,14 +4,6 @@ relay_commander.validator
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This module provides helper functions that validate CLI input.
-
-.. autodata:: _VALID_STATES
-.. autodata:: _REQUIRED_ENV_VARS
-
-.. versionchanged:: 0.0.12
-
-    * Added valid_env_vars() function
-    * Added internal constants for valid state and required env vars.
 """
 import os
 import sys
@@ -55,8 +47,9 @@ def valid_state(state: str) -> bool:
     :returns: True if state is valid.
 
     .. versionchanged:: 0.0.12
-    Refactor for pep8, renamed from validateState to valid_state. Also removed
-    "magic" text for state and now define as constant _VALID_STATES.
+        This moethod was renamed from validateState to valid_state to conform
+        to PEP-8. Also removed "magic" text for state and instead reference the
+        _VALID_STATES constant.
     """
     lower_case_state = state.lower()
 
