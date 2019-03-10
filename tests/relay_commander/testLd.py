@@ -10,7 +10,3 @@ class TestLd(unittest.TestCase):
 
     def testInit(self):
         self.assertIsInstance(self.ld, LaunchDarklyApi)
-        
-    def testFormatHostname(self):
-        formattedHostname = self.ld.formatHostname('test')
-        assert 'test' in formattedHostname

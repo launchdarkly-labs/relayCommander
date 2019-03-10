@@ -51,7 +51,6 @@ This project follows the `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_ st
 Release Checklist
 -----------------
 
-* update VERSION in setup.py
-* update version and release in docs/conf.py
+* update VERSION in version.py
 * make sure CHANGELOG has release date and relevant changes
-* git tag with the new version (make sure it matches VERSION)
+* git tag with the new version (make sure it matches version.py)

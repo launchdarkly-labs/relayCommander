@@ -31,12 +31,6 @@ class LaunchDarklyApi():
         self.feature = launchdarkly_api.FeatureFlagsApi(
             launchdarkly_api.ApiClient(configuration))
 
-    def formatHostname(self, key):
-        """Returns formatted hostname for an environment.
-
-        :param key: environment key
-        """
-        return "{0}".format(key)
 
     def getEnvironments(self, projectKey):
         """Returns List of Environments for a Project.
@@ -54,8 +48,7 @@ class LaunchDarklyApi():
             env = dict(
                 key=env.key,
                 api_key=env.api_key,
-                client_id=env.id,
-                hostname=self.formatHostname(env.key)
+                client_id=env.id
             )
             envs.append(env)
 

@@ -18,16 +18,16 @@
 
 
 # -- Project information -----------------------------------------------------
+from relay_commander.version import VERSION
 
 project = 'Relay Commander'
 copyright = '2019, LaunchDarkly Solutions Engineering Team'
 author = 'LaunchDarkly Solutions Engineering Team'
 
 # The short X.Y version
-version = '0.0'
+version = "{0}.{1}".format(VERSION.split(".")[0], VERSION.split(".")[1])
 # The full version, including alpha/beta/rc tags
-release = '0.0.6'
-
+release = VERSION
 
 # -- General configuration ---------------------------------------------------
 
