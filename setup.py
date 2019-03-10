@@ -9,9 +9,7 @@ import sys
 
 from setuptools import setup
 from setuptools.command.install import install
-
-# relayCommander version
-VERSION = "0.0.11"
+from relay_commander.version import VERSION
 
 
 def readme():
