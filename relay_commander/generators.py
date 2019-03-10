@@ -7,7 +7,7 @@ This module allows for generating LaunchDarkly relay configurations
 using Jinja templates.
 """
 from jinja2 import Environment, PackageLoader
-import launchdarkly_api
+
 
 class ConfigGenerator():
     """Abstract configuration generator using Jinja."""
