@@ -37,7 +37,3 @@ class TestValidator(unittest.TestCase):
         # ENV VAR set and not empty
         os.environ['SET'] = "test"
         self.assertTrue(_check_env_var("SET"))
-
-    def test_valid_env_vars(self):
-        with self.assertRaises(SystemExit):
-            valid_env_vars()
