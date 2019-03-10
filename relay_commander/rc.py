@@ -1,4 +1,9 @@
-"""Relay Commander CLI
+# -*- coding: utf-8 -*-
+"""
+relay_commander.rc
+~~~~~~~~~~~~~~~~~~
+
+This module defines the relayCommander CLI.
 """
 import logging
 import os
@@ -10,7 +15,7 @@ from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
 from relay_commander.replayBuilder import createFile, executeReplay
-from relay_commander.validator import validateState
+from relay_commander.validator import valid_state, valid_env_vars
 
 # set up logging
 logger = logging.getLogger(__name__)
@@ -18,11 +23,16 @@ click_log.basic_config(logger)
 
 
 @click.group()
-@click.version_option(version='0.0.11', prog_name='relayCommander')
+@click.version_option(version='0.0.11', prog_name='rc')
 @click.help_option()
 @click_log.simple_verbosity_option(logger)
-def cli():
-    pass
+def cli() -> None:
+    """Container for all cli commmands.
+
+    Runs valid_env_vars() before each command invocation to verify that
+    required Environment Variables are set and are not empty.
+    """
+    valid_env_vars()
 
 
 @click.command(name='update-redis')
@@ -40,7 +50,7 @@ def updateRedis(project, environment, feature, state):
     for host in hosts:
         logger.info("connecting to {0}:{1}".format(host.host, host.port))
         try:
-            if validateState(state):
+            if valid_state(state):
                 newState = state.lower()
                 r = RedisWrapper(
                     host.host,
@@ -87,7 +97,7 @@ def updateLdApi(project, environment, feature, state):
         logger
     )
 
-    if validateState(state):
+    if valid_state(state):
         validState = False if (state.lower() == 'off') else True
         ld.updateFlag(validState, feature)
     else:
