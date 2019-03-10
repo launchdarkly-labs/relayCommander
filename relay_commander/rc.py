@@ -5,7 +5,6 @@ relay_commander.rc
 
 This module defines the relayCommander CLI.
 """
-import logging
 import os
 
 import click
@@ -16,16 +15,17 @@ from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis import RedisWrapper
 from relay_commander.replayBuilder import createFile, executeReplay
 from relay_commander.validator import valid_state, valid_env_vars
+from relay_commander.version import VERSION
+from relay_commander.util import log
 
 # set up logging
-logger = logging.getLogger(__name__)
-click_log.basic_config(logger)
+click_log.basic_config(log)
 
 
 @click.group()
-@click.version_option(version='0.0.11', prog_name='rc')
+@click.version_option(version=VERSION, prog_name='rc')
 @click.help_option()
-@click_log.simple_verbosity_option(logger)
+@click_log.simple_verbosity_option()
 def cli() -> None:
     """Container for all cli commmands.
 
@@ -35,38 +35,34 @@ def cli() -> None:
     valid_env_vars()
 
 
-@click.command(name='update-redis')
+@click.command()
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-@click_log.simple_verbosity_option(logger)
-def updateRedis(project, environment, feature, state):
+def update_redis(project, environment, feature, state):
     hosts = RedisWrapper.connectionStringParser(os.environ.get('REDIS_HOSTS'))
 
-    if len(hosts) < 1:
-        raise Exception("REDIS_HOSTS is not set or empty.")
-
     for host in hosts:
-        logger.info("connecting to {0}:{1}".format(host.host, host.port))
+        log.info("connecting to {0}:{1}".format(host.host, host.port))
         try:
             if valid_state(state):
                 newState = state.lower()
                 r = RedisWrapper(
                     host.host,
                     host.port,
-                    logger,
+                    log,
                     project,
                     environment
                 )
                 r.updateFlagRecord(newState, feature)
                 createFile(project, environment, feature, newState)
-                logger.info("{0} was successfully updated.".format(feature))
+                log.info("{0} was successfully updated.".format(feature))
             else:
                 raise Exception('Invalid state: {0}, -s needs \
                     to be either on or off.'.format(state))
         except Exception as ex:
-            logger.error("unable to update {0}. Exception: {1}".format(
+            log.error("unable to update {0}. Exception: {1}".format(
                 host.host,
                 ex
             ))
@@ -74,12 +70,11 @@ def updateRedis(project, environment, feature, state):
 
 
 @click.command()
-@click_log.simple_verbosity_option(logger)
 def playback():
     try:
-        executeReplay(logger)
+        executeReplay(log)
     except Exception:
-        logger.error('Unable to Execute Replay.')
+        log.error('Unable to Execute Replay.')
         exit(1)
 
 
@@ -88,13 +83,12 @@ def playback():
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-@click_log.simple_verbosity_option(logger)
 def updateLdApi(project, environment, feature, state):
     ld = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         project,
         environment,
-        logger
+        log
     )
 
     if valid_state(state):
@@ -108,7 +102,6 @@ def updateLdApi(project, environment, feature, state):
 
 @click.command(name='generate-relay-config')
 @click.option('-p', '--project', required=True)
-@click_log.simple_verbosity_option(logger)
 def generateRelayConfig(project):
     """Generate Relay Proxy Configuration
 
@@ -120,7 +113,7 @@ def generateRelayConfig(project):
     ld = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         projectKey=project,
-        logger=logger
+        logger=log
     )
     config = ConfigGenerator()
 
@@ -128,7 +121,7 @@ def generateRelayConfig(project):
     config.generate_relay_config(envs)
 
 
-cli.add_command(updateRedis)
+cli.add_command(update_redis)
 cli.add_command(playback)
 cli.add_command(updateLdApi)
 cli.add_command(generateRelayConfig)
