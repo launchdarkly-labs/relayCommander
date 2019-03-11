@@ -69,8 +69,7 @@ class RedisWrapper():
         """
         Parse Connection string to extract host and port.
 
-        :param uri: full URI for redis connection in the form of
-        host:port
+        :param uri: full URI for redis connection in the form of host:port
 
         :returns: list of RedisConnection objects
         """
