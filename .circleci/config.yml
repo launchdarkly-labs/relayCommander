@@ -57,6 +57,13 @@ jobs:
           command: |
             . venv/bin/activate
             codecov
+      - run:
+          name: Generate Documentation
+          command: |
+            . venv/bin/activate
+            make docs
+      - store_artifacts:
+          path: docs/_build/html
   test-python-install:
     parameters:
       version:
