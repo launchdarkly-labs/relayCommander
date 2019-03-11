@@ -2,7 +2,7 @@ import unittest
 import glob
 import shutil
 
-from relay_commander.replayBuilder import *
+from relay_commander.replay_builder import *
 
 class TestReplayBuilder(unittest.TestCase):
 

@@ -9,9 +9,10 @@ General internal helper functions.
 import logging
 import sys
 
-log = logging.getLogger(sys.modules[__name__].__name__)
-ch = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter(
+# Configure Logging
+LOG = logging.getLogger(sys.modules[__name__].__name__)
+_CH = logging.StreamHandler(sys.stdout)
+_FORMATTER = logging.Formatter(
     '%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-log.addHandler(ch)
+_CH.setFormatter(_FORMATTER)
+LOG.addHandler(_CH)

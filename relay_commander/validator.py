@@ -8,7 +8,7 @@ This module provides helper functions that validate CLI input.
 import os
 import sys
 
-from relay_commander.util import log
+from relay_commander.util import LOG
 
 _VALID_STATES = ['on', 'off']
 """Internal constant that defines a valid ``state`` argument."""
@@ -69,6 +69,6 @@ def valid_env_vars() -> bool:
         try:
             _check_env_var(envvar)
         except KeyError as ex:
-            log.error(ex)
+            LOG.error(ex)
             sys.exit(1)
     return True

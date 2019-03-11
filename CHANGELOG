@@ -18,6 +18,9 @@ Developer Experience
 * Switch away from ``pipenv``. This was causing a few more problems than
   it was solving, so we moved back to using a standard virtualenv, pip,
   and requirements.txt file.
+* Refactor everything for `PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_
+  and `PEP-484 <https://www.python.org/dev/peps/pep-0484/>`_.
+
 
 Version 0.0.11
 --------------

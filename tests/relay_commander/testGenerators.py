@@ -1,6 +1,6 @@
 import unittest
 
-from relay_commander.generators import * 
+from relay_commander.generators import ConfigGenerator
 
 
 class TestGenerators(unittest.TestCase):

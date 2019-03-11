@@ -1,8 +1,14 @@
-"""ld module
+# -*- coding: utf-8 -*-
+"""
+relay_commander.ld
+~~~~~~~~~~~~~~~~~~
 
-Wrapper for the LaunchDarkly API
+This module provides a wrapper for the LaunchDarkly API.
 
 Reference API - https://pypi.org/project/launchdarkly-api/
+
+.. versionchanged:: 0.0.12
+    Refactor module to make it PEP-8 and PEP-484 compliant.
 """
 import launchdarkly_api
 
@@ -10,38 +16,44 @@ import launchdarkly_api
 class LaunchDarklyApi():
     """Wrapper for the LaunchDarkly API"""
 
-    def __init__(self, apiKey, projectKey=None, environmentKey=None, logger=None):
-        """Instantiate a new LaunchDarklyApi instance.
-
-        :param apiKey: API Access Key for LaunchDarkly
-        :param projectKey: Key for project
-        :param environmentKey: Environment in which to pull state from
-        :param featureKey: Feature flag key to pull state from
+    def __init__(
+            self,
+            api_key: str,
+            project_key: str = None,
+            environment_key: str = None
+        ):
         """
-        self.apiKey = apiKey
-        self.projectKey = projectKey
-        self.environmentKey = environmentKey
-        self.logger = logger
+        Instantiate a new LaunchDarklyApi instance.
+
+        :param api_key: API Access Key for LaunchDarkly.
+        :param project_key: Key for project.
+        :param environment_key: Environment in which to \
+            pull state from.
+        """
+        self.api_key = api_key
+        self.project_key = project_key
+        self.environment_key = environment_key
 
         # get new LD client
         configuration = launchdarkly_api.Configuration()
-        configuration.api_key['Authorization'] = apiKey
+        configuration.api_key['Authorization'] = api_key
         self.client = launchdarkly_api.ProjectsApi(
             launchdarkly_api.ApiClient(configuration))
         self.feature = launchdarkly_api.FeatureFlagsApi(
             launchdarkly_api.ApiClient(configuration))
 
 
-    def getEnvironments(self, projectKey):
-        """Returns List of Environments for a Project.
-
-        Includes name, key, and mobile key, and formatted hostname.
-
-        :param projectKey: Key for project
-
-        :returns: Collection of Environments
+    def get_environments(self, project_key: str) -> dict:
         """
-        resp = self.client.get_project(projectKey)
+        Retrieve all environments for a given project.
+
+        Includes name, key, and mobile key.
+
+        :param project_key: Key for project.
+
+        :returns: dictionary of environments.
+        """
+        resp = self.client.get_project(project_key)
         envs = []
 
         for env in resp.environments:
@@ -54,19 +66,21 @@ class LaunchDarklyApi():
 
         return envs
 
-    def updateFlag(self, state, featureKey):
-        """Update the flag status for the specified feature flag
+    def update_flag(self, state: str, feature_key: str) \
+        -> launchdarkly_api.FeatureFlag:
+        """
+        Update the flag status for the specified feature flag.
 
         :param state: New feature flag state
         :param featureKey: Feature flag key
 
-        :returns: boolean status of the feature flag attribute "on"
+        :returns: FeatureFlag object.
         """
-        buildEnv = "/environments/" + self.environmentKey + "/on"
-        patchComment = [{"op": "replace", "path": buildEnv, "value": state}]
+        build_env = "/environments/" + self.environment_key + "/on"
+        patch_comment = [{"op": "replace", "path": build_env, "value": state}]
 
         return self.feature.patch_feature_flag(
-            self.projectKey,
-            featureKey,
-            patchComment
+            self.project_key,
+            feature_key,
+            patch_comment
             )

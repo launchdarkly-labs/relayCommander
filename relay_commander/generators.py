@@ -31,8 +31,8 @@ class ConfigGenerator():
         """
         template = self.env.get_template('ld-relay.conf.jinja')
 
-        with open('ld-relay.conf', 'w') as ldRelayFile:
-            t = template.render(
+        with open('ld-relay.conf', 'w') as ld_relay_config:
+            template = template.render(
                 envs=environments
             )
-            ldRelayFile.write(t)
+            ld_relay_config.write(template)

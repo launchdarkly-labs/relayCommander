@@ -6,8 +6,8 @@ import unittest
 from click.testing import CliRunner
 
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.rc import generateRelayConfig, playback, updateRedis
-from relay_commander.redis import RedisWrapper
+from relay_commander.rc import generate_relay_config, playback, update_redis
+from relay_commander.redis_wrapper import RedisWrapper
 
 
 class TestIntegration(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestIntegration(unittest.TestCase):
         # update redis
         runner = CliRunner()
         result = runner.invoke(
-            updateRedis,
+            update_redis,
             ['-p', 'support-service', '-e', 'lev', '-f',
                 'relay-commander-integration-test', '-s', newState]
         )

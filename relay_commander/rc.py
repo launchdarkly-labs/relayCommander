@@ -3,23 +3,24 @@
 relay_commander.rc
 ~~~~~~~~~~~~~~~~~~
 
-This module defines the relayCommander CLI.
+This module defines the relayCommander CLI using the click library.
 """
 import os
+import sys
 
 import click
 import click_log
 
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.redis import RedisWrapper
-from relay_commander.replayBuilder import createFile, executeReplay
-from relay_commander.util import log
+from relay_commander.redis_wrapper import RedisWrapper
+from relay_commander.replay_builder import create_file, execute_replay
+from relay_commander.util import LOG
 from relay_commander.validator import valid_env_vars, valid_state
 from relay_commander.version import VERSION
 
 # set up logging
-click_log.basic_config(log)
+click_log.basic_config(LOG)
 
 
 @click.group()
@@ -27,7 +28,8 @@ click_log.basic_config(log)
 @click.help_option()
 @click_log.simple_verbosity_option()
 def cli() -> None:
-    """Container for all cli commmands.
+    """
+    Container for all cli commmands.
 
     Runs valid_env_vars() before each command invocation to verify that
     required Environment Variables are set and are not empty.
@@ -43,69 +45,96 @@ def cli() -> None:
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-def update_redis(project, environment, feature, state):
-    hosts = RedisWrapper.connectionStringParser(os.environ.get('REDIS_HOSTS'))
+def update_redis(project: str, environment: str, feature: str, state: str) \
+        -> None:
+    """
+    Update redis state for a feature flag.
+
+    :param project: LaunchDarkly project key.
+    :param environment: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+    """
+    try:
+        hosts = RedisWrapper.connection_string_parser(
+            os.environ.get('REDIS_HOSTS'))
+    except RuntimeError as ex:
+        LOG.error(ex)
+        sys.exit(1)
 
     for host in hosts:
-        log.info("connecting to {0}:{1}".format(host.host, host.port))
+        LOG.info("connecting to %s:%s", host.host, host.port)
         try:
             if valid_state(state):
-                newState = state.lower()
-                r = RedisWrapper(
+                new_state = state.lower()
+                redis = RedisWrapper(
                     host.host,
                     host.port,
-                    log,
                     project,
                     environment
                 )
-                r.updateFlagRecord(newState, feature)
-                createFile(project, environment, feature, newState)
-                log.info("{0} was successfully updated.".format(feature))
+                redis.update_flag_record(new_state, feature)
+                create_file(project, environment, feature, new_state)
+                LOG.info("%s was successfully updated.", feature)
             else:
                 raise Exception('Invalid state: {0}, -s needs \
                     to be either on or off.'.format(state))
-        except Exception as ex:
-            log.error("unable to update {0}. Exception: {1}".format(
-                host.host,
-                ex
-            ))
-            exit(1)
+        except KeyError as ex:
+            LOG.error("unable to update %s. Exception: %s",
+                      host.host,
+                      ex)
+            sys.exit(1)
 
 
 @click.command()
 def playback():
+    """
+    Attempt to play back all commands in the replay/toDo directory.
+    """
     try:
-        executeReplay(log)
-    except Exception:
-        log.error('Unable to Execute Replay.')
-        exit(1)
+        execute_replay()
+    except ValueError as ex:
+        LOG.error(ex)
+        sys.exit(1)
 
 
-@click.command(name='update-ld-api')
+@click.command()
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-def updateLdApi(project, environment, feature, state):
-    ld = LaunchDarklyApi(
+def update_ld_api(project: str, environment: str, feature: str, state: str):
+    """
+    Execute command against the LaunchDarkly API.
+
+    This command is generally not used directly, instead it is called as a
+    part of running the ``playback()`` function.
+
+    :param project: LaunchDarkly project key.
+    :param environment: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+    """
+    ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         project,
-        environment,
-        log
+        environment
     )
 
     if valid_state(state):
-        validState = False if (state.lower() == 'off') else True
-        ld.updateFlag(validState, feature)
+        if state.lower() == 'off':
+            new_state = False
+        else:
+            new_state = True
+        ld_api.update_flag(new_state, feature)
     else:
-        raise Exception('Invalid state: {0}, -s needs to be either \
+        raise ValueError('Invalid state: {0}, -s needs to be either \
             on or off.'.format(state))
-        exit(1)
 
 
-@click.command(name='generate-relay-config')
+@click.command()
 @click.option('-p', '--project', required=True)
-def generateRelayConfig(project):
+def generate_relay_config(project):
     """Generate Relay Proxy Configuration
 
     Generate a ld-relay.conf file to quickly spin up a relay proxy.
@@ -113,21 +142,20 @@ def generateRelayConfig(project):
 
     :param project: LaunchDarkly project key
     """
-    ld = LaunchDarklyApi(
+    ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
-        projectKey=project,
-        logger=log
+        project_key=project
     )
     config = ConfigGenerator()
 
-    envs = ld.getEnvironments(project)
+    envs = ld_api.get_environments(project)
     config.generate_relay_config(envs)
 
 
 cli.add_command(update_redis)
 cli.add_command(playback)
-cli.add_command(updateLdApi)
-cli.add_command(generateRelayConfig)
+cli.add_command(update_ld_api)
+cli.add_command(generate_relay_config)
 
 if __name__ == '__main__':
     cli()
