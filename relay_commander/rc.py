@@ -24,9 +24,9 @@ click_log.basic_config(LOG)
 
 
 @click.group()
+@click_log.simple_verbosity_option()
 @click.version_option(version=VERSION, prog_name='rc')
 @click.help_option()
-@click_log.simple_verbosity_option()
 def cli() -> None:
     """
     Container for all cli commmands.

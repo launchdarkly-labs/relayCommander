@@ -38,8 +38,8 @@ class TestIntegration(unittest.TestCase):
 
         # playback
         result = runner.invoke(
+            ['-v', 'DEBUG'],
             playback,
-            ['-v', 'DEBUG']
         )
         print(result.output)
         self.assertEqual(result.exit_code, 0)
