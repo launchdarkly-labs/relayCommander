@@ -8,16 +8,16 @@ Version 0.0.12
 
 UNRELEASED
 
-Core CLI
-~~~~~~~~
+Core CLI:
 
-Developer Experience
-~~~~~~~~~~~~~~~~~~~~
-* Add sphinx-click extension which allows us to automatically generate
-  documentation for our click based CLI using sphinx.
-* Switch away from ``pipenv``. This was causing a few more problems than
-  it was solving, so we moved back to using a standard virtualenv, pip,
-  and requirements.txt file.
+Developer Experience:
+    * Add sphinx-click extension which allows us to automatically generate
+      documentation for our click based CLI using sphinx.
+    * Switch away from ``pipenv``. This was causing a few more problems than
+      it was solving, so we moved back to using a standard virtualenv, pip,
+      and requirements.txt file.
+    * Refactor everything for `PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_
+      and `PEP-484 <https://www.python.org/dev/peps/pep-0484/>`_.
 
 Version 0.0.11
 --------------
@@ -47,7 +47,7 @@ Version 0.0.10
 Released on January 28, 2019
 
 * Add feature that allows users to override the default redis port as
-a part of the configuration.
+   a part of the configuration.
 
 Version 0.0.9
 -------------
@@ -55,8 +55,8 @@ Version 0.0.9
 Released on January 25, 2019
 
 * Add feature to allow users to define multiple redis destinations. The CLI
-will then attempt to update all hosts and report back the status via the
-console.
+  will then attempt to update all hosts and report back the status via the
+  console.
 
 .. warning::
     All of the versions below have been unpublished from pypi to reduce

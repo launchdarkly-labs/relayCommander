@@ -6,4 +6,5 @@ twine
 sphinx
 sphinx_rtd_theme
 sphinx-click
+sphinx-autodoc-typehints
 pylint

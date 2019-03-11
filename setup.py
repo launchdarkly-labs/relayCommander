@@ -9,9 +9,7 @@ import sys
 
 from setuptools import setup
 from setuptools.command.install import install
-
-# relayCommander version
-VERSION = "0.0.11"
+from relay_commander.version import VERSION
 
 
 def readme():
@@ -28,8 +26,8 @@ class VerifyVersionCommand(install):
         tag = os.getenv('CIRCLE_TAG')
 
         if tag != VERSION:
-            info = "Git tag: {0} does not match the version of this \
-                app: {1}".format(tag, VERSION)
+            info = "Git tag: {0} does not match the version of this app: {1}" \
+                .format(tag, VERSION)
             sys.exit(info)
 
 

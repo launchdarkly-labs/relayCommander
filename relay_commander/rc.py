@@ -1,127 +1,156 @@
-"""Relay Commander CLI
+# -*- coding: utf-8 -*-
 """
-import logging
+relay_commander.rc
+~~~~~~~~~~~~~~~~~~
+
+This module defines the relayCommander CLI using the click library.
+"""
 import os
+import sys
 
 import click
-
 import click_log
+
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.redis import RedisWrapper
-from relay_commander.replayBuilder import createFile, executeReplay
-from relay_commander.validator import validateState
+from relay_commander.redis_wrapper import RedisWrapper
+from relay_commander.replay_builder import create_file, execute_replay
+from relay_commander.util import LOG
+from relay_commander.validator import valid_env_vars, valid_state
+from relay_commander.version import VERSION
 
 # set up logging
-logger = logging.getLogger(__name__)
-click_log.basic_config(logger)
+click_log.basic_config(LOG)
 
 
 @click.group()
-@click.version_option(version='0.0.11', prog_name='relayCommander')
+@click_log.simple_verbosity_option()
+@click.version_option(version=VERSION, prog_name='rc')
 @click.help_option()
-@click_log.simple_verbosity_option(logger)
-def cli():
-    pass
-
-
-@click.command(name='update-redis')
-@click.option('-p', '--project', required=True)
-@click.option('-e', '--environment', required=True)
-@click.option('-f', '--feature', required=True)
-@click.option('-s', '--state', required=True)
-@click_log.simple_verbosity_option(logger)
-def updateRedis(project, environment, feature, state):
-    hosts = RedisWrapper.connectionStringParser(os.environ.get('REDIS_HOSTS'))
-
-    if len(hosts) < 1:
-        raise Exception("REDIS_HOSTS is not set or empty.")
-
-    for host in hosts:
-        logger.info("connecting to {0}:{1}".format(host.host, host.port))
-        try:
-            if validateState(state):
-                newState = state.lower()
-                r = RedisWrapper(
-                    host.host,
-                    host.port,
-                    logger,
-                    project,
-                    environment
-                )
-                r.updateFlagRecord(newState, feature)
-                createFile(project, environment, feature, newState)
-                logger.info("{0} was successfully updated.".format(feature))
-            else:
-                raise Exception('Invalid state: {0}, -s needs \
-                    to be either on or off.'.format(state))
-        except Exception as ex:
-            logger.error("unable to update {0}. Exception: {1}".format(
-                host.host,
-                ex
-            ))
-            exit(1)
+def cli() -> None:
+    """
+    A CLI for working with LaunchDarkly relay instances.
+    """
+    valid_env_vars()
 
 
 @click.command()
-@click_log.simple_verbosity_option(logger)
-def playback():
-    try:
-        executeReplay(logger)
-    except Exception:
-        logger.error('Unable to Execute Replay.')
-        exit(1)
-
-
-@click.command(name='update-ld-api')
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
-@click_log.simple_verbosity_option(logger)
-def updateLdApi(project, environment, feature, state):
-    ld = LaunchDarklyApi(
+def update_redis(project: str, environment: str, feature: str, state: str) \
+        -> None:
+    """
+    Update redis state for a feature flag.
+
+    :param project: LaunchDarkly project key.
+    :param environment: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+    """
+    try:
+        hosts = RedisWrapper.connection_string_parser(
+            os.environ.get('REDIS_HOSTS'))
+    except RuntimeError as ex:
+        LOG.error(ex)
+        sys.exit(1)
+
+    for host in hosts:
+        LOG.info("connecting to %s:%s", host.host, host.port)
+        try:
+            if valid_state(state):
+                new_state = state.lower()
+                redis = RedisWrapper(
+                    host.host,
+                    host.port,
+                    project,
+                    environment
+                )
+                redis.update_flag_record(new_state, feature)
+                create_file(project, environment, feature, new_state)
+                LOG.info("%s was successfully updated.", feature)
+            else:
+                raise Exception('Invalid state: {0}, -s needs \
+                    to be either on or off.'.format(state))
+        except KeyError as ex:
+            LOG.error("unable to update %s. Exception: %s",
+                      host.host,
+                      ex)
+            sys.exit(1)
+
+
+@click.command()
+def playback():
+    """
+    Execute commands in the replay/toDo directory.
+    """
+    try:
+        execute_replay()
+    except ValueError as ex:
+        LOG.error(ex)
+        sys.exit(1)
+
+
+@click.command()
+@click.option('-p', '--project', required=True)
+@click.option('-e', '--environment', required=True)
+@click.option('-f', '--feature', required=True)
+@click.option('-s', '--state', required=True)
+def update_ld_api(project: str, environment: str, feature: str, state: str):
+    """
+    Execute command against the LaunchDarkly API.
+
+    This command is generally not used directly, instead it is called as a
+    part of running the ``playback()`` function.
+
+    :param project: LaunchDarkly project key.
+    :param environment: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+    """
+    ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         project,
-        environment,
-        logger
+        environment
     )
 
-    if validateState(state):
-        validState = False if (state.lower() == 'off') else True
-        ld.updateFlag(validState, feature)
+    if valid_state(state):
+        if state.lower() == 'off':
+            new_state = False
+        else:
+            new_state = True
+        ld_api.update_flag(new_state, feature)
     else:
-        raise Exception('Invalid state: {0}, -s needs to be either \
+        raise ValueError('Invalid state: {0}, -s needs to be either \
             on or off.'.format(state))
-        exit(1)
 
 
-@click.command(name='generate-relay-config')
+@click.command()
 @click.option('-p', '--project', required=True)
-@click_log.simple_verbosity_option(logger)
-def generateRelayConfig(project):
-    """Generate Relay Proxy Configuration
+def generate_relay_config(project):
+    """
+    Generate Relay Proxy Configuration.
 
     Generate a ld-relay.conf file to quickly spin up a relay proxy.
     Right now this is mostly used for integration testing.
 
     :param project: LaunchDarkly project key
     """
-    ld = LaunchDarklyApi(
+    ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
-        projectKey=project,
-        logger=logger
+        project_key=project
     )
     config = ConfigGenerator()
 
-    envs = ld.getEnvironments(project)
+    envs = ld_api.get_environments(project)
     config.generate_relay_config(envs)
 
 
-cli.add_command(updateRedis)
+cli.add_command(update_redis)
 cli.add_command(playback)
-cli.add_command(updateLdApi)
-cli.add_command(generateRelayConfig)
+cli.add_command(update_ld_api)
+cli.add_command(generate_relay_config)
 
 if __name__ == '__main__':
     cli()

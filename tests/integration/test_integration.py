@@ -6,13 +6,13 @@ import unittest
 from click.testing import CliRunner
 
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.rc import generateRelayConfig, playback, updateRedis
-from relay_commander.redis import RedisWrapper
+from relay_commander.rc import generate_relay_config, playback, update_redis, cli
+from relay_commander.redis_wrapper import RedisWrapper
 
 
 class TestIntegration(unittest.TestCase):
 
-    def testIntegration(self):
+    def test_integration(self):
         # working with relay-commander-integration-test flag
 
         # get current flag state from LD
@@ -29,7 +29,7 @@ class TestIntegration(unittest.TestCase):
         # update redis
         runner = CliRunner()
         result = runner.invoke(
-            updateRedis,
+            update_redis,
             ['-p', 'support-service', '-e', 'lev', '-f',
                 'relay-commander-integration-test', '-s', newState]
         )
@@ -38,8 +38,8 @@ class TestIntegration(unittest.TestCase):
 
         # playback
         result = runner.invoke(
-            playback,
-            ['-v', 'DEBUG']
+            cli,
+            ['-v', 'DEBUG', 'playback'],
         )
         print(result.output)
         self.assertEqual(result.exit_code, 0)
