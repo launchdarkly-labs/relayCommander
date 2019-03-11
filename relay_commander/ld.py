@@ -10,7 +10,11 @@ Reference API - https://pypi.org/project/launchdarkly-api/
 .. versionchanged:: 0.0.12
     Refactor module to make it PEP-8 and PEP-484 compliant.
 """
+import sys
+
 import launchdarkly_api
+
+from relay_commander.util import LOG
 
 
 class LaunchDarklyApi():
@@ -53,7 +57,14 @@ class LaunchDarklyApi():
 
         :returns: dictionary of environments.
         """
-        resp = self.client.get_project(project_key)
+        try:
+            resp = self.client.get_project(project_key)
+        except launchdarkly_api.rest.ApiException as ex:
+            msg = "Unable to get environments."
+            resp = "API response was {0} {1}.".format(ex.status, ex.reason)
+            LOG.error("%s %s", msg, resp)
+            sys.exit(1)
+
         envs = []
 
         for env in resp.environments:
@@ -79,8 +90,13 @@ class LaunchDarklyApi():
         build_env = "/environments/" + self.environment_key + "/on"
         patch_comment = [{"op": "replace", "path": build_env, "value": state}]
 
-        return self.feature.patch_feature_flag(
-            self.project_key,
-            feature_key,
-            patch_comment
-            )
+        try:
+            resp = self.feature.patch_feature_flag(
+                self.project_key, feature_key, patch_comment)
+        except launchdarkly_api.rest.ApiException as ex:
+            msg = "Unable to update flag."
+            resp = "API response was {0} {1}.".format(ex.status, ex.reason)
+            LOG.error("%s %s", msg, resp)
+            sys.exit(1)
+
+        return resp
