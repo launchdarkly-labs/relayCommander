@@ -6,7 +6,7 @@ import unittest
 from click.testing import CliRunner
 
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.rc import generate_relay_config, playback, update_redis
+from relay_commander.rc import generate_relay_config, playback, update_redis, cli
 from relay_commander.redis_wrapper import RedisWrapper
 
 
@@ -38,8 +38,8 @@ class TestIntegration(unittest.TestCase):
 
         # playback
         result = runner.invoke(
-            ['-v', 'DEBUG'],
-            playback,
+            cli,
+            ['-v', 'DEBUG', 'playback'],
         )
         print(result.output)
         self.assertEqual(result.exit_code, 0)
