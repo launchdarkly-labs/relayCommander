@@ -6,18 +6,18 @@ from relay_commander.validator import valid_state, valid_env_vars, _check_env_va
 
 class TestValidator(unittest.TestCase):
 
-    def testInvalidInput(self):
+    def test_invalid_input(self):
         result = valid_state('bad')
         self.assertFalse(result)
 
-    def testValidInput(self):
+    def test_valid_input(self):
         result = valid_state('on')
         self.assertTrue(result)
 
         result = valid_state('off')
         self.assertTrue(result)
 
-    def testValidInputMixcase(self):
+    def test_valid_input_mixed_case(self):
         result = valid_state('oN')
         self.assertTrue(result)
 

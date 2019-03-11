@@ -10,7 +10,7 @@ class TestRc(unittest.TestCase):
     def setUp(self):
         pass
 
-    def testMainCli(self):
+    def test_main_cli(self):
         runner = CliRunner()
         result = runner.invoke(cli)
 

@@ -10,16 +10,16 @@ class TestRedis(unittest.TestCase):
     def setUp(self):
         self.redis = RedisWrapper('localhost', 6379, 'test', 'test')
 
-    def testFormatKeyName(self):
-        formattedKey = 'ld:test:test:features'
-        self.assertEqual(formattedKey, self.redis._format_key_name())
+    def test_format_key_name(self):
+        formatted_key = 'ld:test:test:features'
+        self.assertEqual(formatted_key, self.redis._format_key_name())
 
-    def testGetFlagRecord(self):
+    def test_get_flag_record(self):
         # test unknown flag key raises exception
         with self.assertRaises(Exception):
-            flag = self.redis.get_flag_record('test')
+            self.redis.get_flag_record('test')
 
-    def testConnectionStringParser(self):
+    def test_connection_string_parser(self):
         # single box, default port
         hosts = self.redis.connection_string_parser('localhost')
 

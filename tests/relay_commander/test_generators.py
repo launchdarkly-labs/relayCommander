@@ -8,5 +8,5 @@ class TestGenerators(unittest.TestCase):
     def setUp(self):
         self.configGenerator = ConfigGenerator()
 
-    def testInit(self):
+    def test_init(self):
         self.assertIsInstance(self.configGenerator, ConfigGenerator)

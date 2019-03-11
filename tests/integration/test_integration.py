@@ -12,7 +12,7 @@ from relay_commander.redis_wrapper import RedisWrapper
 
 class TestIntegration(unittest.TestCase):
 
-    def testIntegration(self):
+    def test_integration(self):
         # working with relay-commander-integration-test flag
 
         # get current flag state from LD
