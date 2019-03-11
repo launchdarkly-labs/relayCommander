@@ -29,13 +29,7 @@ click_log.basic_config(LOG)
 @click.help_option()
 def cli() -> None:
     """
-    Container for all cli commmands.
-
-    Runs valid_env_vars() before each command invocation to verify that
-    required Environment Variables are set and are not empty.
-
-    .. versionchanged:: 0.0.12
-    Added environment variable check before executing any other command.
+    A CLI for working with LaunchDarkly relay instances.
     """
     valid_env_vars()
 
@@ -89,7 +83,7 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
 @click.command()
 def playback():
     """
-    Attempt to play back all commands in the replay/toDo directory.
+    Execute commands in the replay/toDo directory.
     """
     try:
         execute_replay()
@@ -135,7 +129,8 @@ def update_ld_api(project: str, environment: str, feature: str, state: str):
 @click.command()
 @click.option('-p', '--project', required=True)
 def generate_relay_config(project):
-    """Generate Relay Proxy Configuration
+    """
+    Generate Relay Proxy Configuration.
 
     Generate a ld-relay.conf file to quickly spin up a relay proxy.
     Right now this is mostly used for integration testing.
