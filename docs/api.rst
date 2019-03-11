@@ -16,7 +16,7 @@ Utilities
     :private-members:
     :special-members:
 
-.. automodule:: relay_commander.replayBuilder
+.. automodule:: relay_commander.replay_builder
     :members:
     :private-members:
     :special-members:
@@ -29,7 +29,7 @@ Wrappers
     :private-members:
     :special-members:
 
-.. automodule:: relay_commander.redis
+.. automodule:: relay_commander.redis_wrapper
     :members:
     :private-members:
     :special-members:
