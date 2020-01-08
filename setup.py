@@ -58,7 +58,8 @@ setup(
         'requests',
         'redis',
         'jinja2',
-        'launchdarkly-api'
+        'launchdarkly-api',
+        'boto3'
     ],
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
     python_requires='~=3.5',

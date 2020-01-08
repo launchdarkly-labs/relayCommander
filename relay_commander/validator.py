@@ -12,7 +12,8 @@ from relay_commander.util import LOG
 
 _VALID_STATES = ['on', 'off']
 """Internal constant that defines a valid ``state`` argument."""
-_REQUIRED_ENV_VARS = ['LD_API_KEY', 'REDIS_HOSTS']
+_REQUIRED_LD_API_VARS = ['LD_API_KEY']
+_REQUIRED_REDIS_VARS = ['REDIS_HOSTS']
 """Internal constant that defines required environment variables."""
 
 
@@ -58,17 +59,31 @@ def valid_state(state: str) -> bool:
     return False
 
 
-def valid_env_vars() -> bool:
+def valid_ld_api_vars() -> bool:
     """Validate that required env vars exist.
 
     :returns: True if required env vars exist.
 
     .. versionadded:: 0.0.12
     """
-    for envvar in _REQUIRED_ENV_VARS:
+    for envvar in _REQUIRED_LD_API_VARS:
         try:
             _check_env_var(envvar)
         except KeyError as ex:
             LOG.error(ex)
             sys.exit(1)
     return True
+
+def valid_redis_vars() -> bool:
+    """Validate that required env vars exist.
+
+    :returns: True if required env vars exist.
+
+    .. versionadded:: 0.0.12
+    """
+    for envvar in _REQUIRED_REDIS_VARS:
+        try:
+            _check_env_var(envvar)
+        except KeyError as ex:
+            LOG.error(ex)
+            sys.exit(1)
