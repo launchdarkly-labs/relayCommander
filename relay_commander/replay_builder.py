@@ -77,11 +77,12 @@ def execute_replay() -> None:
     For every command that is found in replay/toDo, execute each of them
     and move the file to the replay/archive directory.
     """
+
     files = glob.glob('./replay/toDo/*')
     sorted_files = sorted(files, key=os.path.getctime)
 
-    if not sorted_files:  # list is not empty
-        LOG.debug('Found %s, beginning execution.', sorted_files)
+    if sorted_files:  # list is not empty
+        LOG.info('Found %s, beginning execution.', sorted_files)
         for command_file in sorted_files:
             with open(command_file, 'r') as command:
                 cmd = command.read()

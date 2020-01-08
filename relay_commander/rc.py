@@ -14,9 +14,10 @@ import click_log
 from relay_commander.generators import ConfigGenerator
 from relay_commander.ld import LaunchDarklyApi
 from relay_commander.redis_wrapper import RedisWrapper
+from relay_commander.dynamodb_wrapper import DdbWrapper
 from relay_commander.replay_builder import create_file, execute_replay
 from relay_commander.util import LOG
-from relay_commander.validator import valid_env_vars, valid_state
+from relay_commander.validator import valid_ld_api_vars, valid_redis_vars,valid_state
 from relay_commander.version import VERSION
 
 # set up logging
@@ -31,14 +32,40 @@ def cli() -> None:
     """
     A CLI for working with LaunchDarkly relay instances.
     """
-    valid_env_vars()
-
 
 @click.command()
+@click.option('-d', '--datastore', required=True)
 @click.option('-p', '--project', required=True)
 @click.option('-e', '--environment', required=True)
 @click.option('-f', '--feature', required=True)
 @click.option('-s', '--state', required=True)
+@click.option('-t', '--table', required=False)
+def update(datastore: str, project: str, environment: str, feature: str, state: str, table: str) \
+        -> None:
+    """
+    Update data store for a feature flag.
+
+    :param datastore: Datastore used: either redis or dynamodb.
+    :param project: LaunchDarkly project key.
+    :param environment: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+    :param table: Table name for DynamoDB.
+    """
+    try:
+        if datastore == "redis":
+            update_redis(project, environment, feature, state)
+        elif datastore == "dynamodb":
+            if table:
+                update_dynamodb(project, environment, feature, state, table)
+            else:
+                LOG.error("Table name must be specified for DynamoDB")
+        else:
+            LOG.error("Datastore needs to be either: redis or dynamodb")
+    except RuntimeError as ex:
+        LOG.error(ex)
+        sys.exit(1)
+
 def update_redis(project: str, environment: str, feature: str, state: str) \
         -> None:
     """
@@ -49,6 +76,7 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
     :param feature: LaunchDarkly feature key.
     :param state: State for a feature flag.
     """
+    valid_redis_vars()
     try:
         hosts = RedisWrapper.connection_string_parser(
             os.environ.get('REDIS_HOSTS'))
@@ -68,7 +96,7 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
                     environment
                 )
                 redis.update_flag_record(new_state, feature)
-                create_file(project, environment, feature, new_state)
+                create_file(project, environment, feature, state)
                 LOG.info("%s was successfully updated.", feature)
             else:
                 raise Exception('Invalid state: {0}, -s needs \
@@ -109,6 +137,7 @@ def update_ld_api(project: str, environment: str, feature: str, state: str):
     :param feature: LaunchDarkly feature key.
     :param state: State for a feature flag.
     """
+    valid_ld_api_vars()
     ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         project,
@@ -137,6 +166,7 @@ def generate_relay_config(project):
 
     :param project: LaunchDarkly project key
     """
+    valid_ld_api_vars()
     ld_api = LaunchDarklyApi(
         os.environ.get('LD_API_KEY'),
         project_key=project
@@ -146,8 +176,35 @@ def generate_relay_config(project):
     envs = ld_api.get_environments(project)
     config.generate_relay_config(envs)
 
+def update_dynamodb(project: str, environment: str, feature: str, state: str, table: str) \
+-> None:
+    """
+    Update DynamoDB for a feature flag
 
-cli.add_command(update_redis)
+    :param table: table name for DynamoDB.
+    :param project_key: LaunchDarkly project key
+    :param environment_key: LaunchDarkly environment key.
+    :param feature: LaunchDarkly feature key.
+    :param state: State for a feature flag.
+
+    """
+    try:
+        ddb = DdbWrapper(table, project, environment)
+    except RuntimeError as ex:
+        LOG.error(ex)
+        sys.exit(1)
+
+    LOG.info("connecting to DynamoDB table: %s", table)
+
+    if valid_state(state):
+        new_state = state.lower()
+        ddb.update_ddb_flag_record(feature, new_state)
+        create_file(project, environment, feature, state)
+        LOG.info("%s was successfully updated.", feature)
+    else:
+        LOG.error('Invalid state: {0}, -s needs to be either on or off.'.format(state))
+
+cli.add_command(update)
 cli.add_command(playback)
 cli.add_command(update_ld_api)
 cli.add_command(generate_relay_config)

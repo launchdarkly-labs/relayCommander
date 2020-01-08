@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from relay_commander.validator import valid_state, valid_env_vars, _check_env_var
+from relay_commander.validator import valid_state, valid_redis_vars, _check_env_var
 
 
 class TestValidator(unittest.TestCase):
