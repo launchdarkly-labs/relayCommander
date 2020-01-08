@@ -4,3 +4,4 @@ requests
 redis
 jinja2
 launchdarkly-api
+boto3
