@@ -33,3 +33,8 @@ Wrappers
     :members:
     :private-members:
     :special-members:
+
+.. automodule:: relay_commander.dynamodb_wrapper
+    :members:
+    :private-members:
+    :special-members:

@@ -79,4 +79,3 @@ class DdbWrapper():
                 '#state': 'item',
             }
         )
-        print(response)

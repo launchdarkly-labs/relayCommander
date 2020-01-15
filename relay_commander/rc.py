@@ -60,11 +60,7 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
         LOG.info("connecting to %s:%s", host.host, host.port)
         try:
             if valid_state(state):
-                if state.lower() == 'off':
-                    new_state = False
-                else:
-                    new_state = True
-
+                new_state = state.lower()
                 redis = RedisWrapper(
                     host.host,
                     host.port,
@@ -180,11 +176,7 @@ def update_dynamodb(table: str, project: str, environment: str, feature: str, st
     LOG.info("connecting to DynamoDB table: %s", table)
 
     if valid_state(state):
-        if state.lower() == 'off':
-            new_state = False
-        else:
-            new_state = True
-
+        new_state = state.lower()
         ddb.update_ddb_flag_record(feature, new_state)
         create_file(project, environment, feature, state)
         LOG.info("%s was successfully updated.", feature)

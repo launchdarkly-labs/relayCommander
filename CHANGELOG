@@ -3,6 +3,17 @@ Changelog
 
 Here you can see the full list of changs between each relaycommander release.
 
+Version 0.0.13
+--------------
+
+Released on January 15, 2020
+
+Core CLI:
+  * Add feature to support updates for feature flags stored in dynamodb using AWS boto3.
+
+Developer Experience:
+  * Add integration tests for dynamodb.
+
 Version 0.0.12
 --------------
 

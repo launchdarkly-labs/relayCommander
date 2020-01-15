@@ -5,7 +5,7 @@ RelayCommander is a CLI tool that is intended to allow you to manually make a
 change to feature flags should your applications lose connectivity with the
 LaunchDarkly service. You must have the LD Relay setup with Redis in order for
 the CLI tool to work. It works by manually updating the status of a flag
-directly within Redis, while at the same time recording each update that has
+directly within Redis or dynamodb, while at the same time recording each update that has
 taken place. Then, once connection has been re-established with LaunchDarkly,
 you will then run a command that will update your configuration back to our
 service via the API. This iteration allows you to change the state of a
@@ -41,8 +41,24 @@ Update redis by running:
 
 ::
 
-    rc update -p project -e environment -f feature_flag -s state
+    rc update-redis -p project -e environment -f feature_flag -s state
 
+* Project = the key of the project to be updated
+* Environment = the key of the environment to be updated
+* Feature = the key of the feature to be updated
+* State = the state of the feature flag you would like to change it to. Currently allows you to set it to on or off
+
+Update Dynamodb by running:
+
+Pre-requisites
+~~~~~~~~~~~~~~
+* AWS credentials must be configured for boto3, see for more info on how.
+
+::
+
+    rc update-dynamodb -t ld-relay -p project -e environment -f feature_flag -s state
+
+* Table = the Dynamodb table name
 * Project = the key of the project to be updated
 * Environment = the key of the environment to be updated
 * Feature = the key of the feature to be updated
