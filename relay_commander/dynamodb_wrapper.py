@@ -1,6 +1,7 @@
 import boto3
 import json
 import sys
+import os
 
 from relay_commander.util import LOG
 
@@ -24,7 +25,15 @@ class DdbWrapper():
         self.project_key = project_key
         self.environment_key = environment_key
         self.ddb_table = DDB_CLIENT.Table(table)
-
+        self.ddb_namespace_prefix = os.environ.get("DDB_NAMESPACE_PREFIX")
+    
+    def _format_namespace(self) -> str:
+        """Return formatted DynamoDB namespace."""
+        if self.ddb_namespace_prefix:
+            namespace = self.ddb_namespace_prefix
+        else:
+            namespace = 'ld:{0}:{1}:features'.format(self.project_key, self.environment_key)
+        return namespace
 
     def get_ddb_flag_record(self, feature_key: str) -> str:
         """Get feature flag record from DynamoDB.
@@ -35,11 +44,18 @@ class DdbWrapper():
 
         :raises: KeyError if key is not found.
         """
+        response = self.ddb_table.scan()
+        data = response['Items']
+        namespace = self._format_namespace()
+        while 'LastEvaluatedKey' in response:
+            response = self.ddb_table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+            data.extend(response['Items'])
+
         response = self.ddb_table.get_item(
             Key={
-            'namespace': 'ld:{0}:{1}:features'.format(self.project_key, self.environment_key),
+            'namespace': namespace,
             'key': feature_key
-            }
+            } 
         )
 
         try:
@@ -55,6 +71,7 @@ class DdbWrapper():
         :param state: state for feature flag.
         :param feature_key: key for feature flag.
         """
+        namespace = self._format_namespace()
         item = self.get_ddb_flag_record(feature)
         try:
             item['on'] = state
@@ -64,11 +81,11 @@ class DdbWrapper():
             LOG.error(ex)
             sys.exit(1)
 
-        LOG.info('updating %s to %s', feature, state)
+        LOG.info('updating %s to %s with namespace:%s', feature, state, namespace)
 
         response = self.ddb_table.update_item(
             Key={
-                'namespace': 'ld:{0}:{1}:features'.format(self.project_key, self.environment_key),
+                'namespace': namespace,
                 'key': feature
             },
             UpdateExpression='set #state = :r',

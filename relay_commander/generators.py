@@ -17,7 +17,7 @@ class ConfigGenerator():
             loader=PackageLoader('relay_commander', 'templates')
         )
 
-    def generate_relay_config(self, environments: list) -> None:
+    def generate_relay_config(self, environments: list, store: str) -> None:
         """Generate ld-relay.conf file.
 
         Given a list of environments of a project, this will generate a
@@ -33,6 +33,7 @@ class ConfigGenerator():
 
         with open('ld-relay.conf', 'w') as ld_relay_config:
             template = template.render(
-                envs=environments
+                envs=environments,
+                store=store
             )
             ld_relay_config.write(template)

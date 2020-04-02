@@ -85,7 +85,6 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
         sys.exit(1)
 
     for host in hosts:
-        LOG.info("connecting to %s:%s", host.host, host.port)
         try:
             if valid_state(state):
                 new_state = state.lower()
@@ -95,6 +94,7 @@ def update_redis(project: str, environment: str, feature: str, state: str) \
                     project,
                     environment
                 )
+                LOG.info("connecting to %s:%s with redis key: %s", host.host, host.port, redis._format_key_name())
                 redis.update_flag_record(new_state, feature)
                 create_file(project, environment, feature, state)
                 LOG.info("%s was successfully updated.", feature)
@@ -157,7 +157,8 @@ def update_ld_api(project: str, environment: str, feature: str, state: str):
 
 @click.command()
 @click.option('-p', '--project', required=True)
-def generate_relay_config(project):
+@click.option('-s', '--store', required=True)
+def generate_relay_config(project, store):
     """
     Generate Relay Proxy Configuration.
 
@@ -165,6 +166,7 @@ def generate_relay_config(project):
     Right now this is mostly used for integration testing.
 
     :param project: LaunchDarkly project key
+    :param store: feature store, either dynamodb or redis
     """
     valid_ld_api_vars()
     ld_api = LaunchDarklyApi(
@@ -172,9 +174,8 @@ def generate_relay_config(project):
         project_key=project
     )
     config = ConfigGenerator()
-
     envs = ld_api.get_environments(project)
-    config.generate_relay_config(envs)
+    config.generate_relay_config(envs, store)
 
 def update_dynamodb(project: str, environment: str, feature: str, state: str, table: str) \
 -> None:
@@ -190,11 +191,10 @@ def update_dynamodb(project: str, environment: str, feature: str, state: str, ta
     """
     try:
         ddb = DdbWrapper(table, project, environment)
+        LOG.info("connecting to DynamoDB table: %s with namespace: %s", table, ddb._format_namespace())
     except RuntimeError as ex:
         LOG.error(ex)
         sys.exit(1)
-
-    LOG.info("connecting to DynamoDB table: %s", table)
 
     if valid_state(state):
         new_state = state.lower()

@@ -34,10 +34,19 @@ jobs:
             . venv/bin/activate
             rc
       - run:
-          name: Generate Relay Config
+          name: Generate Redis Relay Config
           command: |
             . venv/bin/activate
-            rc generate-relay-config -p support-service
+            rc generate-relay-config -p support-service -s redis
+      - run:
+          name: Start LD Relay
+          command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
+          background: true
+      - run:
+          name: Generate DynamoDB Relay Config
+          command: |
+            . venv/bin/activate
+            rc generate-relay-config -p support-service -s dynamodb
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
@@ -98,10 +107,19 @@ jobs:
             . venv/bin/activate
             rc
       - run:
-          name: Generate Relay Config
+          name: Generate Redis Relay Config
           command: |
             . venv/bin/activate
-            rc generate-relay-config -p support-service
+            rc generate-relay-config -p support-service -s redis
+      - run:
+          name: Start LD Relay
+          command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
+          background: true
+      - run:
+          name: Generate DynamoDB Relay Config
+          command: |
+            . venv/bin/activate
+            rc generate-relay-config -p support-service -s dynamodb
       - run:
           name: Start LD Relay
           command: $GOPATH/bin/ld-relay --config ./ld-relay.conf
