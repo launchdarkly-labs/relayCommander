@@ -4,3 +4,5 @@ requests
 redis
 jinja2
 launchdarkly-api
+boto3
+docutils<0.16

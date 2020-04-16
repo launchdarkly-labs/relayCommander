@@ -6,8 +6,8 @@ A CLI for managing `LaunchDarkly Relay <https://github.com/launchdarkly/ld-relay
 .. image:: https://codecov.io/gh/launchdarkly/relayCommander/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/launchdarkly/relayCommander
 
-.. image:: https://circleci.com/gh/launchdarkly/relayCommander.svg?style=shield
-    :target: https://circleci.com/gh/launchdarkly/relayCommander
+.. image:: https://circleci.com/gh/launchdarkly-labs/relayCommander.svg?style=svg
+    :target: https://circleci.com/gh/launchdarkly-labs/relayCommander
 
 .. image:: https://readthedocs.org/projects/relay-commander/badge/?version=latest
     :target: http://relaycommander.readthedocs.io/en/latest/?badge=latest

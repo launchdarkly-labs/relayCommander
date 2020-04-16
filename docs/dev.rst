@@ -20,7 +20,7 @@ Running Tests
 
 Tests can be found in the ``tests`` directory.
 
-You can run tests with ``make tests``.
+You can run tests with ``make test``.
 
 If you want to run a specific test file you can do so with:
 

@@ -1,13 +1,29 @@
+{% if store == 'redis' %}
 [main]
     streamUri = "https://stream.launchdarkly.com"
     baseUri = "https://app.launchdarkly.com"
-
 [redis]
     host = localhost
     port = 6379
-
 {% for env in envs -%}
 [environment "{{ env.key }}"]
     prefix = "{{ "{0}:{1}:{2}".format('ld', 'support-service', env.key) }}"
     sdkKey = "{{ env.api_key}}"
 {% endfor %}
+{% elif store == 'dynamodb' %}
+[main]
+    streamUri = "https://stream.launchdarkly.com"
+    baseUri = "https://app.launchdarkly.com"
+    port = 8090
+[dynamodb]
+    enabled = true
+    tableName = "ld-relay"
+    localTtl = 30000
+{% endif %}
+{%- for env in envs -%}
+{% if env.key == "lev" %}
+[environment "{{ env.key }}"]
+    prefix = "{{ "ld:support-service:{0}".format(env.key) }}"
+    sdkKey = "{{ env.api_key}}"
+{% endif %}
+{%- endfor %}

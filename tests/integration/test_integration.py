@@ -6,8 +6,9 @@ import unittest
 from click.testing import CliRunner
 
 from relay_commander.ld import LaunchDarklyApi
-from relay_commander.rc import generate_relay_config, playback, update_redis, cli
+from relay_commander.rc import generate_relay_config, playback, update_redis, cli, update_dynamodb, update
 from relay_commander.redis_wrapper import RedisWrapper
+from relay_commander.dynamodb_wrapper import DdbWrapper
 
 
 class TestIntegration(unittest.TestCase):
@@ -28,14 +29,22 @@ class TestIntegration(unittest.TestCase):
 
         # update redis
         runner = CliRunner()
-        result = runner.invoke(
-            update_redis,
-            ['-p', 'support-service', '-e', 'lev', '-f',
-                'relay-commander-integration-test', '-s', newState]
+        reds_result = runner.invoke(
+            cli,
+            ['-v', 'DEBUG', 'update', '-d', 'redis', '-p', 'support-service', '-e', 'lev', '-f',
+                'show-widgets', '-s', newState]
         )
-        print(result.output)
-        self.assertEqual(result.exit_code, 0)
+        print(reds_result.output)
+        self.assertEqual(reds_result.exit_code, 0)
 
+        ddb_result = runner.invoke(
+            cli,
+            ['-v', 'DEBUG', 'update', '-d', 'dynamodb', '-p', 'support-service', '-e', 'lev', '-f',
+                'show-widgets', '-s', newState, '-t', 'ld-relay']
+        )
+        print(ddb_result.output)
+        self.assertEqual(ddb_result.exit_code, 0)
+        
         # playback
         result = runner.invoke(
             cli,

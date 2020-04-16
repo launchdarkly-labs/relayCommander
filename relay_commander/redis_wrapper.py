@@ -13,7 +13,7 @@ This module provides an interface for working with redis.
 """
 import json
 import sys
-
+import os
 import redis
 
 from relay_commander.util import LOG
@@ -55,13 +55,17 @@ class RedisWrapper():
         self.project_key = project_key
         self.environment_key = environment_key
         self.redis = redis.Redis(host=host, port=port)
+        self.redis_key_prefix = os.environ.get("REDIS_KEY_PREFIX")
 
     def _format_key_name(self) -> str:
         """Return formatted redis key name."""
-        key_name = 'ld:{0}:{1}:features'.format(
-            self.project_key,
-            self.environment_key
-        )
+        if self.redis_key_prefix:
+            key_name = self.redis_key_prefix
+        else:
+            key_name = 'ld:{0}:{1}:features'.format(
+                self.project_key,
+                self.environment_key
+            )
         return key_name
 
     @staticmethod
@@ -110,7 +114,7 @@ class RedisWrapper():
         """
         key_name = self._format_key_name()
         flag = self.redis.hget(key_name, feature_key)
-
+    
         if flag is None:
             raise KeyError('Redis key: {0} not found.'.format(key_name))
 
@@ -132,6 +136,6 @@ class RedisWrapper():
             LOG.error(ex)
             sys.exit(1)
 
-        LOG.info('updating %s to %s', feature_key, state)
+        LOG.info('updating %s to %s with key %s', feature_key, state, key_name)
 
         self.redis.hset(key_name, feature_key, updated_flag)
