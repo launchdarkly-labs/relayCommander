@@ -58,7 +58,7 @@ setup(
         'requests',
         'redis',
         'jinja2',
-        'launchdarkly-api==4.0.0'
+        'launchdarkly-api==2.0.14'
     ],
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
     python_requires='~=3.5',
